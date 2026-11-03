@@ -47,7 +47,7 @@ if [ "${LTO:-thin}" != full ]; then
 fi
 "${MAKE[@]}" -s olddefconfig
 
-for opt in KSU KSU_SUSFS KPROBES EXT4_FS NOMOUNT SYSVIPC CFI_CLANG MODVERSIONS DEFAULT_BBR; do
+for opt in KSU KSU_SUSFS KSU_HOOK_TRACEPOINT KALLSYMS_ALL KPROBES EXT4_FS NOMOUNT SYSVIPC CFI_CLANG MODVERSIONS DEFAULT_BBR; do
     grep -q "^CONFIG_$opt=y" "$OUT/.config" || { echo "[!] CONFIG_$opt is not enabled"; exit 1; }
 done
 
