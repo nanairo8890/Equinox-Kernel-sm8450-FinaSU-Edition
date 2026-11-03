@@ -7,6 +7,41 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 1.6 (2026-11-03)
+
+Kernel nuevo con FinaSU v1.4.4 y el mismo instalador de 1.5, que comprueba los módulos del vendor antes de flashear. La versión 1.5 no se publicó como release aparte. La release también trae el paquete como `Equinox-5.10.269-FinaSU-1.6-mondrian-checkonly.zip`, que solo hace la comprobación.
+
+**FinaSU v1.4.4**
+- FinaSU pasa de v1.2.1 a v1.4.4 (`53fcde65`, versión 33167). Sigue en UAPI 6. Usa el manager oficial de FinaSU v1.4.4 (`FinaSU_v1.4.4_33167-release.apk`), que tiene la misma firma de antes.
+- Con el userspace 1.4 de FinaSU, el kernel de r2 y 1.5 no podía listar las rutas de desmontaje del kernel (`ksud kernel umount list`) ni informar al manager el tipo de hook; 1.6 sí.
+- Hooks: el backend Tracepoint, el predeterminado de FinaSU y el de siempre. El nuevo backend SUSFS Inline no se activa.
+- El nuevo filtro de módulos anti-root de vivo queda apagado: solo se enciende con un parámetro en la línea de comandos del kernel que MistOS no pone (comprobado apagado en el teléfono).
+- El instalador muestra FinaSU v1.4.4 (33167).
+
+**SUSFS**
+- Sigue en `eb95da0` (v2.3.0). Desde el 31 de octubre, SUSFS cambió el ocultamiento de SELinux a un modelo que FinaSU todavía no soporta: el parche ya no llama a las funciones de FinaSU y necesita que KernelSU registre los tipos y reglas de SELinux. Con FinaSU, SELinux quedaría sin ocultar, así que se actualizará cuando FinaSU lo adopte.
+- El filtro de prioridad de SUSFS (`set_priority_uid_filter`, "Hide third party apps" en BRENE) sigue sin efecto, porque FinaSU no despacha ese comando. BRENE v0.0.75 cuenta 10 funciones del kernel y aquí verá 9.
+
+**Más símbolos ocultos en /proc/kallsyms**
+- FinaSU v1.3 a v1.4.4 agregó símbolos que el filtro no cubría: el filtro de módulos de vivo (`vivo_module_filter`, su parámetro, los envoltorios de `init_module`/`finit_module` y sus auxiliares) y `get_try_umount`. Ahora se ocultan, junto con símbolos más antiguos de FinaSU que r2 también dejaba a la vista: `add_try_umount`, el parámetro `preinit`, `do_stop_input_hook`, `read_proxy`/`read_iter_proxy` y `release_perm_data`.
+- Cada prefijo nuevo se comprobó contra un Equinox limpio y contra los módulos del vendor de MistOS 20261025 e Infinity-X 4.1, que también aparecen en `/proc/kallsyms`: ninguno coincide.
+
+**Otros cambios**
+- `scripts/equinox/build-finasu.sh` comprueba que la config use el backend Tracepoint y tenga `CONFIG_KALLSYMS_ALL`, que FinaSU exige desde v1.3.1 para integrarse en el kernel.
+
+**Si usas BRENE**
+- No configures SUSFS desde el manager de FinaSU mientras uses BRENE: los dos escriben la misma configuración y gana el último.
+- BRENE vuelve a aplicar en cada arranque `su_compat`, `kernel_umount` y `selinux_hide`; esos interruptores se cambian desde su WebUI.
+- Si `uname -r` sale con doble guion (`5.10.269--N-g...`), es BRENE: arma el nombre falso con un dato de KMI que no encuentra en este kernel. Se arregla con un uname personalizado en BRENE.
+
+**Comprobado**
+- KMI contra Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`). Exporta exactamente los mismos CRC que r2 y 1.5, así que las ROMs compatibles con 1.5 lo siguen siendo.
+- Coinciden los CRC de los módulos del vendor (337 de `vendor_boot` y 390 de `vendor_dlkm`) de MistOS 5.1 Beta 20261025 (los mismos que 20261024 y 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 y las últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles.
+- **Probado en el teléfono** (POCO F5 Pro, MistOS 5.1 Beta 20261025), arrancando este kernel con `fastboot boot`, sin flashearlo: arranca, 385 módulos cargados y 0 rechazados, root funciona, SELinux en Enforcing, sin panics ni avisos, NoMount cargado, SUSFS v2.3.0, BBR, y `/proc/kallsyms` da 0 para todos los nombres delatores.
+- La comprobación del instalador (`kmicheck` del zip 1.6, con las opciones del instalador) también se corrió en el teléfono: compatible con MistOS 5.1 Beta 20261025 y con el `vendor_dlkm` del propio teléfono (725 módulos, 0 problemas) e incompatible con AOSPA calcite. El zip completo no se flasheó.
+
+---
+
 ## 1.5 (2026-10-31)
 
 Mismo kernel que r2 (`5.10.269-Nanairo-FinaSU`, el mismo Image); esta versión cambia el instalador. La release también trae el paquete como `Equinox-5.10.269-FinaSU-1.5-mondrian-checkonly.zip`, que solo hace la comprobación.

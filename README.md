@@ -16,17 +16,17 @@
 > **This repository is the FinaSU edition of Equinox for MistOS**, made by **Nanairo** with
 > LF52406's permission. It is Equinox 5.10.269 as released, with these changes:
 >
-> - **[FinaSU](https://github.com/LyraVoid/FinaSU)** by LyraVoid (a fork of [KernelSU](https://github.com/tiann/KernelSU)) instead of KernelSU-Next, as the `KernelSU/` submodule at `be19eb90` (`v1.2.1`, version 33074), built into the kernel. Use the **official FinaSU manager** (`FinaSU_v1.2.1_33074-release.apk`, package `me.yuki.fina`): the kernel trusts that manager's signing certificate in FinaSU's release trust slot, and other KernelSU-family managers are recognized but never granted. FinaSU uses UAPI 6.
-> - **SUSFS v2.3.0** from [simonpunk's](https://gitlab.com/simonpunk/susfs4ksu) `gki-android12-5.10` branch at `eb95da0`, through FinaSU's SUSFS support.
+> - **[FinaSU](https://github.com/LyraVoid/FinaSU)** by LyraVoid (a fork of [KernelSU](https://github.com/tiann/KernelSU)) instead of KernelSU-Next, as the `KernelSU/` submodule at `53fcde65` (`v1.4.4`, version 33167), built into the kernel with FinaSU's default Tracepoint hook backend. Use the **official FinaSU manager** (`FinaSU_v1.4.4_33167-release.apk`, package `me.yuki.fina`): the kernel trusts that manager's signing certificate in FinaSU's release trust slot, and other KernelSU-family managers are recognized but never granted. FinaSU uses UAPI 6.
+> - **SUSFS v2.3.0** from [simonpunk's](https://gitlab.com/simonpunk/susfs4ksu) `gki-android12-5.10` branch at `eb95da0`, through FinaSU's SUSFS support. Newer SUSFS commits move SELinux hiding to a model that FinaSU does not support yet, so this edition stays at `eb95da0` until it does.
 > - **BBR** as the default TCP congestion control.
 > - **[NoMount](https://github.com/maxsteeel/nomount) v2.2.0** by maxsteeel built in (`fs/nomount`), which includes deref3046's fix. FinaSU detects the built-in driver and uses it as the **NoMount** mount backend, so **no metamodule is needed** (choose NoMount in the manager; remove the NoMount metamodule if installed). Processes that FinaSU/SUSFS umount modules for see the stock filesystem, and NoMount is hidden from `/sys/module` and `/proc/kallsyms`.
-> - **Extra `/proc/kallsyms` hiding** (r2): FinaSU exports many driver symbols whose names do not start with the usual KernelSU/SUSFS prefixes, so SUSFS's filter left them visible. The filter now also hides those, each one checked against a clean Equinox build so only FinaSU's own symbols are hidden.
+> - **Extra `/proc/kallsyms` hiding** (r2, extended in 1.6): FinaSU exports many driver symbols whose names do not start with the usual KernelSU/SUSFS prefixes, so SUSFS's filter left them visible. The filter now also hides those, each one checked against a clean Equinox build; the prefixes added in 1.6 were also checked against the vendor modules of MistOS 20261025 and Infinity-X 4.1, so only FinaSU's own symbols are hidden.
 >
 > Everything else, DroidSpaces included, is LF52406's work, described below. The official Equinox
 > builds are at [LF52406/Equinox-Kernel-sm8450](https://github.com/LF52406/Equinox-Kernel-sm8450).
 > Report problems with this edition to Nanairo8890, not to LF52406 or LyraVoid.
 >
-> Build: `CLANG_DIR=/path/to/clang/bin scripts/equinox/build-finasu.sh`, then `scripts/equinox/package-finasu.sh` · Changes: [release notes](scripts/equinox/release-notes/5.10.269-finasu-1.5.md) · Changelog: [English](CHANGELOG.en.txt) · [Español](CHANGELOG.es.txt) · [Português (Brasil)](CHANGELOG.pt-BR.txt) · [Русский](CHANGELOG.ru.txt)
+> Build: `CLANG_DIR=/path/to/clang/bin scripts/equinox/build-finasu.sh`, then `scripts/equinox/package-finasu.sh` · Changes: [release notes](scripts/equinox/release-notes/5.10.269-finasu-1.6.md) · Changelog: [English](CHANGELOG.en.txt) · [Español](CHANGELOG.es.txt) · [Português (Brasil)](CHANGELOG.pt-BR.txt) · [Русский](CHANGELOG.ru.txt)
 
 ---
 
@@ -34,10 +34,10 @@
 
 | Component | Current |
 |:--|:--|
-| **Version** | `1.5` |
+| **Version** | `1.6` |
 | **Linux** | `5.10.269-Nanairo-FinaSU` |
-| **Compatibility** | MistOS and the AOSP ROMs listed in [Other AOSP ROMs](#other-aosp-roms); tested on MistOS 5.1 Beta 20261025 |
-| **FinaSU** | `v1.2.1` (33074), built in |
+| **Compatibility** | MistOS and the AOSP ROMs listed in [Other AOSP ROMs](#other-aosp-roms); tested on MistOS 5.1 Beta 20261025 (`fastboot boot`) |
+| **FinaSU** | `v1.4.4` (33167), built in · Tracepoint hooks |
 | **SUSFS** | `2.3.0` (`eb95da0`) |
 | **NoMount** | `v2.2.0` built in |
 | **DroidSpaces** | Supported |
@@ -61,6 +61,15 @@
 ---
 
 ## Latest Changes
+
+### 1.6
+
+- FinaSU updated from `v1.2.1` to `v1.4.4` (33167); use the FinaSU `v1.4.4` manager. With FinaSU's 1.4 userspace, the r2 kernel could not list the kernel umount paths or report the hook type; 1.6 can
+- Hooks: FinaSU's default Tracepoint backend, as before (the new SUSFS Inline backend is not enabled)
+- SUSFS stays at `eb95da0` (v2.3.0): newer SUSFS commits change SELinux hiding in a way FinaSU does not support yet
+- `/proc/kallsyms` filter extended to the symbols FinaSU added since v1.2.1 (the vivo module filter and `get_try_umount`) and to older FinaSU symbols that r2 still showed
+- Same installer as 1.5, with the vendor module check; 1.5 was not published as a separate release
+- Exports the same symbol CRCs as r2 and 1.5, so the ROM compatibility below still holds; tested on the phone with MistOS 5.1 Beta 20261025 (`fastboot boot`, not flashed), where the installer's `kmicheck` was also run
 
 ### 1.5
 
@@ -87,11 +96,11 @@
 
 Builds are published through **GitHub Releases**, with the SHA256 of each file on the release page.
 
-**Current package:** `Equinox-5.10.269-FinaSU-1.5-mondrian.zip`
+**Current package:** `Equinox-5.10.269-FinaSU-1.6-mondrian.zip`
 
 Download the release asset and flash the AnyKernel3 ZIP using a compatible recovery or kernel flasher. The ZIP only replaces the kernel `Image`, after checking that the ROM's vendor modules accept it; if you update the ROM, flash it again afterwards. Install the FinaSU manager from the release to manage root, modules and SUSFS.
 
-Not sure whether your ROM is compatible? Flash `Equinox-5.10.269-FinaSU-1.5-mondrian-checkonly.zip` first: it runs the same check and flashes nothing.
+Not sure whether your ROM is compatible? Flash `Equinox-5.10.269-FinaSU-1.6-mondrian-checkonly.zip` first: it runs the same check and flashes nothing.
 
 > GitHub-generated `Source code` archives are not flashable kernel packages.
 
@@ -103,17 +112,18 @@ The ZIP keeps the ROM's vendor modules (`vendor_boot` and `vendor_dlkm`), and th
 
 | ROM | ROM kernel | Status |
 |:--|:--|:--|
-| MistOS 5.1 Beta / 5.0 Alpha | 5.10.269 | Tested |
-| Latest builds from Keosh: crDroid 12.12 (20260928), Evolution X 11.11, Infinity-X 3.12 (VANILLA, GAPPS core and extra, 29.09.2026), Lunaris 3.12 (VANILLA and GMS), LineageOS 23.2 (20260929), Axion 2.8 (VANILLA and GMS) | `5.10.269-gki-g1598dc02ea84` | Compatible: the CRCs of all 337 `vendor_boot` and 390 `vendor_dlkm` modules match the r2 kernel |
-| Infinity-X 4.1 by LF5 (17.10.2026) | | Compatible |
-| crDroid 12.12 by Taha Keles (20260930) | `5.10.260-Weil+` | Compatible: all 725 non-blocklisted modules match the r2 kernel (`kmicheck`) |
+| MistOS 5.1 Beta (20261011 to 20261025) | 5.10.269 | Tested on 20261025 (`fastboot boot`); the CRCs of all 337 `vendor_boot` and 390 `vendor_dlkm` modules match |
+| MistOS 5.0 Alpha 20260914 | `5.10.256-gki-gb48a614d5811` | Compatible: the CRCs of all 337 `vendor_boot` and 390 `vendor_dlkm` modules match |
+| Latest builds from Keosh: crDroid 12.12 (20260928), Evolution X 11.11, Infinity-X 3.12 (VANILLA, GAPPS core and extra, 29.09.2026), Lunaris 3.12 (VANILLA and GMS), LineageOS 23.2 (20260929), Axion 2.8 (VANILLA and GMS) | `5.10.269-gki-g1598dc02ea84` | Compatible: the CRCs of all 337 `vendor_boot` and 390 `vendor_dlkm` modules match (checked with r2 and with 1.6) |
+| Infinity-X 4.1 by LF5 (17.10.2026) | `5.10.269-gki-g283772ceb844` | Compatible: the CRCs of all 337 `vendor_boot` and 390 `vendor_dlkm` modules match (checked with r2 and with 1.6) |
+| crDroid 12.12 by Taha Keles (20260930) | `5.10.260-Weil+` | Compatible: all 725 non-blocklisted modules match the r2 kernel (`kmicheck`), which exports the same CRCs as 1.6 |
 | AOSPA calcite (a17-gms 20261012, a17-microg 20261013), PenguinOS celerity (20261011) | `5.10.269-beryl-7156c6f9fb`, their own | **Not compatible**: 376 + 279 `vendor_boot` / `vendor_dlkm` modules, almost all with other CRCs |
 | LineageOS `lineage-24.0` (Android 17) and `lineage-23.2` (Android 16 QPR2), and ROMs built on them | 5.10.269 | Expected to work: same tree as Equinox |
 | LineageOS `lineage-23.0` / `lineage-23.1` (Android 16) | 5.10.247 | Not verified |
 | LineageOS `lineage-22.2` (Android 15) | 5.10.245 | Not verified |
 | HyperOS / MIUI | | Not supported |
 
-Packages made with `scripts/equinox/package-finasu.sh` check this before flashing: `kmicheck` reads the ROM's modules from `vendor_boot` and `vendor_dlkm` and compares them with the kernel's own symbol table (`kmi.symvers`). If any module would be rejected (different CRC, a symbol this kernel does not export, a duplicate export or a different vermagic), the installer stops before writing anything and lists the modules. A ZIP with `nocheck` in its file name skips the check; one with `checkonly` runs the check and flashes nothing, to find out whether a ROM is compatible. Packages from 1.5 on include this check; r2 does not.
+Packages made with `scripts/equinox/package-finasu.sh` check this before flashing: `kmicheck` reads the ROM's modules from `vendor_boot` and `vendor_dlkm` and compares them with the kernel's own symbol table (`kmi.symvers`). If any module would be rejected (different CRC, a symbol this kernel does not export, a duplicate export or a different vermagic), the installer stops before writing anything and lists the modules. A ZIP with `nocheck` in its file name skips the check; one with `checkonly` runs the check and flashes nothing, to find out whether a ROM is compatible. Released packages from 1.6 on include this check (1.5 was not released separately); r2 does not.
 
 ---
 

@@ -7,6 +7,41 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 1.6 (2026-11-03)
+
+New kernel with FinaSU v1.4.4 and the same installer as 1.5, which checks the vendor modules before flashing. Version 1.5 was not published as a separate release. The release also has the package as `Equinox-5.10.269-FinaSU-1.6-mondrian-checkonly.zip`, which only runs the check.
+
+**FinaSU v1.4.4**
+- FinaSU updated from v1.2.1 to v1.4.4 (`53fcde65`, version 33167). It still uses UAPI 6. Use the official FinaSU v1.4.4 manager (`FinaSU_v1.4.4_33167-release.apk`), which has the same signature as before.
+- With FinaSU's 1.4 userspace, the r2 and 1.5 kernel could not list the kernel umount paths (`ksud kernel umount list`) or report the hook type to the manager; 1.6 can.
+- Hooks: the Tracepoint backend, FinaSU's default and the same as before. The new SUSFS Inline backend is not enabled.
+- FinaSU's new vivo anti-root module filter stays off: it only turns on with a kernel command-line parameter that MistOS does not set (checked off on the phone).
+- The installer shows FinaSU v1.4.4 (33167).
+
+**SUSFS**
+- Stays at `eb95da0` (v2.3.0). Since October 31, SUSFS has moved SELinux hiding to a model that FinaSU does not support yet: the patch no longer calls FinaSU's functions and needs KernelSU to record the SELinux types and rules. With FinaSU, SELinux would be left unhidden, so SUSFS will be updated once FinaSU adopts it.
+- SUSFS's priority filter (`set_priority_uid_filter`, "Hide third party apps" in BRENE) still has no effect, because FinaSU does not dispatch that command. BRENE v0.0.75 counts 10 kernel features and will see 9 here.
+
+**More symbols hidden from /proc/kallsyms**
+- FinaSU v1.3 to v1.4.4 added symbols that the filter did not cover: the vivo module filter (`vivo_module_filter`, its parameter, the `init_module`/`finit_module` wrappers and their helpers) and `get_try_umount`. They are now hidden, together with older FinaSU symbols that r2 also left visible: `add_try_umount`, the `preinit` parameter, `do_stop_input_hook`, `read_proxy`/`read_iter_proxy` and `release_perm_data`.
+- Each new prefix was checked against a clean Equinox build and against the vendor modules of MistOS 20261025 and Infinity-X 4.1, which also appear in `/proc/kallsyms`: none matches.
+
+**Other changes**
+- `scripts/equinox/build-finasu.sh` checks that the configuration uses the Tracepoint backend and has `CONFIG_KALLSYMS_ALL`, which FinaSU has required since v1.3.1 to be built into the kernel.
+
+**If you use BRENE**
+- Do not configure SUSFS from the FinaSU manager while you use BRENE: both write the same settings and the last one wins.
+- BRENE applies `su_compat`, `kernel_umount` and `selinux_hide` again on every boot; change those switches from its WebUI.
+- If `uname -r` shows a double hyphen (`5.10.269--N-g...`), that comes from BRENE: it builds the spoofed name from a KMI value it cannot find in this kernel. Set a custom uname in BRENE to fix it.
+
+**Verified**
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added). It exports exactly the same CRCs as r2 and 1.5, so the ROMs that are compatible with 1.5 still are.
+- Vendor module CRCs match (337 `vendor_boot` and 390 `vendor_dlkm` modules) for MistOS 5.1 Beta 20261025 (the same modules as 20261024 and 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 and the latest builds from Keosh; AOSPA and PenguinOS are still not compatible.
+- **Tested on the phone** (POCO F5 Pro, MistOS 5.1 Beta 20261025) by booting this kernel with `fastboot boot`, without flashing it: boots, 385 modules loaded and 0 rejected, root works, SELinux Enforcing, no panics or warnings, NoMount loaded, SUSFS v2.3.0, BBR, and `/proc/kallsyms` returns 0 for every root-revealing name.
+- The installer's check (`kmicheck` from the 1.6 zip, with the installer's options) was also run on the phone: compatible with MistOS 5.1 Beta 20261025 and with the phone's own `vendor_dlkm` (725 modules, 0 problems), incompatible with AOSPA calcite. The full zip was not flashed.
+
+---
+
 ## 1.5 (2026-10-31)
 
 Same kernel as r2 (`5.10.269-Nanairo-FinaSU`, identical Image); this version changes the installer. The release also has the package as `Equinox-5.10.269-FinaSU-1.5-mondrian-checkonly.zip`, which only runs the check.
