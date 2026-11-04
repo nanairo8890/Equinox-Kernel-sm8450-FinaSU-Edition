@@ -7,13 +7,13 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
-## 1.6 (2026-11-03)
+## 1.8 (2026-11-03)
 
-Kernel nuevo con FinaSU v1.4.4 y el mismo instalador de 1.5, que comprueba los módulos del vendor antes de flashear. La versión 1.5 no se publicó como release aparte. La release también trae el paquete como `Equinox-5.10.269-FinaSU-1.6-mondrian-checkonly.zip`, que solo hace la comprobación.
+Kernel nuevo con FinaSU v1.4.4 y el mismo instalador de 1.5, que comprueba los módulos del vendor antes de flashear. La versión 1.5 no se publicó como release aparte. La release también trae el paquete como `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, que solo hace la comprobación.
 
 **FinaSU v1.4.4**
 - FinaSU pasa de v1.2.1 a v1.4.4 (`53fcde65`, versión 33167). Sigue en UAPI 6. Usa el manager oficial de FinaSU v1.4.4 (`FinaSU_v1.4.4_33167-release.apk`), que tiene la misma firma de antes.
-- Con el userspace 1.4 de FinaSU, el kernel de r2 y 1.5 no podía listar las rutas de desmontaje del kernel (`ksud kernel umount list`) ni informar al manager el tipo de hook; 1.6 sí.
+- Con el userspace 1.4 de FinaSU, el kernel de r2 y 1.5 no podía listar las rutas de desmontaje del kernel (`ksud kernel umount list`) ni informar al manager el tipo de hook; 1.8 sí.
 - Hooks: el backend Tracepoint, el predeterminado de FinaSU y el de siempre. El nuevo backend SUSFS Inline no se activa.
 - El nuevo filtro de módulos anti-root de vivo queda apagado: solo se enciende con un parámetro en la línea de comandos del kernel que MistOS no pone (comprobado apagado en el teléfono).
 - El instalador muestra FinaSU v1.4.4 (33167).
@@ -38,7 +38,7 @@ Kernel nuevo con FinaSU v1.4.4 y el mismo instalador de 1.5, que comprueba los m
 - KMI contra Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`). Exporta exactamente los mismos CRC que r2 y 1.5, así que las ROMs compatibles con 1.5 lo siguen siendo.
 - Coinciden los CRC de los módulos del vendor (337 de `vendor_boot` y 390 de `vendor_dlkm`) de MistOS 5.1 Beta 20261025 (los mismos que 20261024 y 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 y las últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles.
 - **Probado en el teléfono** (POCO F5 Pro, MistOS 5.1 Beta 20261025), arrancando este kernel con `fastboot boot`, sin flashearlo: arranca, 385 módulos cargados y 0 rechazados, root funciona, SELinux en Enforcing, sin panics ni avisos, NoMount cargado, SUSFS v2.3.0, BBR, y `/proc/kallsyms` da 0 para todos los nombres delatores.
-- La comprobación del instalador (`kmicheck` del zip 1.6, con las opciones del instalador) también se corrió en el teléfono: compatible con MistOS 5.1 Beta 20261025 y con el `vendor_dlkm` del propio teléfono (725 módulos, 0 problemas) e incompatible con AOSPA calcite. El zip completo no se flasheó.
+- La comprobación del instalador (`kmicheck` del zip 1.8, con las opciones del instalador) también se corrió en el teléfono: compatible con MistOS 5.1 Beta 20261025 y con el `vendor_dlkm` del propio teléfono (725 módulos, 0 problemas) e incompatible con AOSPA calcite. El zip completo no se flasheó.
 
 ---
 

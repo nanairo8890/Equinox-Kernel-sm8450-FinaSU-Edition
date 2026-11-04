@@ -7,13 +7,13 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
-## 1.6 (2026-11-03)
+## 1.8 (2026-11-03)
 
-New kernel with FinaSU v1.4.4 and the same installer as 1.5, which checks the vendor modules before flashing. Version 1.5 was not published as a separate release. The release also has the package as `Equinox-5.10.269-FinaSU-1.6-mondrian-checkonly.zip`, which only runs the check.
+New kernel with FinaSU v1.4.4 and the same installer as 1.5, which checks the vendor modules before flashing. Version 1.5 was not published as a separate release. The release also has the package as `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, which only runs the check.
 
 **FinaSU v1.4.4**
 - FinaSU updated from v1.2.1 to v1.4.4 (`53fcde65`, version 33167). It still uses UAPI 6. Use the official FinaSU v1.4.4 manager (`FinaSU_v1.4.4_33167-release.apk`), which has the same signature as before.
-- With FinaSU's 1.4 userspace, the r2 and 1.5 kernel could not list the kernel umount paths (`ksud kernel umount list`) or report the hook type to the manager; 1.6 can.
+- With FinaSU's 1.4 userspace, the r2 and 1.5 kernel could not list the kernel umount paths (`ksud kernel umount list`) or report the hook type to the manager; 1.8 can.
 - Hooks: the Tracepoint backend, FinaSU's default and the same as before. The new SUSFS Inline backend is not enabled.
 - FinaSU's new vivo anti-root module filter stays off: it only turns on with a kernel command-line parameter that MistOS does not set (checked off on the phone).
 - The installer shows FinaSU v1.4.4 (33167).
@@ -38,7 +38,7 @@ New kernel with FinaSU v1.4.4 and the same installer as 1.5, which checks the ve
 - KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added). It exports exactly the same CRCs as r2 and 1.5, so the ROMs that are compatible with 1.5 still are.
 - Vendor module CRCs match (337 `vendor_boot` and 390 `vendor_dlkm` modules) for MistOS 5.1 Beta 20261025 (the same modules as 20261024 and 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 and the latest builds from Keosh; AOSPA and PenguinOS are still not compatible.
 - **Tested on the phone** (POCO F5 Pro, MistOS 5.1 Beta 20261025) by booting this kernel with `fastboot boot`, without flashing it: boots, 385 modules loaded and 0 rejected, root works, SELinux Enforcing, no panics or warnings, NoMount loaded, SUSFS v2.3.0, BBR, and `/proc/kallsyms` returns 0 for every root-revealing name.
-- The installer's check (`kmicheck` from the 1.6 zip, with the installer's options) was also run on the phone: compatible with MistOS 5.1 Beta 20261025 and with the phone's own `vendor_dlkm` (725 modules, 0 problems), incompatible with AOSPA calcite. The full zip was not flashed.
+- The installer's check (`kmicheck` from the 1.8 zip, with the installer's options) was also run on the phone: compatible with MistOS 5.1 Beta 20261025 and with the phone's own `vendor_dlkm` (725 modules, 0 problems), incompatible with AOSPA calcite. The full zip was not flashed.
 
 ---
 
