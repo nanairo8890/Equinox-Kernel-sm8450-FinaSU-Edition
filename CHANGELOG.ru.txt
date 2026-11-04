@@ -2,7 +2,7 @@
 
 # Equinox Kernel, редакция FinaSU: список изменений
 
-Редакция от Nanairo8890, с разрешения LF52406. На основе Equinox Kernel 5.10.269 для POCO F5 Pro / Redmi K60 (`mondrian`), для MistOS 5.1 Beta.
+Редакция от Nanairo8890, с разрешения LF52406. На основе Equinox Kernel 5.10.269 для POCO F5 Pro / Redmi K60 (`mondrian`).
 О проблемах этой редакции сообщайте Nanairo8890, а не LF52406 или LyraVoid.
 
 ---

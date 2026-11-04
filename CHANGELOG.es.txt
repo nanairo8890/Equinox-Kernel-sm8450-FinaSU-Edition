@@ -2,7 +2,7 @@ Idioma: Español
 
 # Equinox Kernel edición FinaSU: Changelog
 
-Edición de Nanairo8890, con permiso de LF52406. Basada en Equinox Kernel 5.10.269 para el POCO F5 Pro / Redmi K60 (`mondrian`), para MistOS 5.1 Beta.
+Edición de Nanairo8890, con permiso de LF52406. Basada en Equinox Kernel 5.10.269 para el POCO F5 Pro / Redmi K60 (`mondrian`).
 Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVoid.
 
 ---
