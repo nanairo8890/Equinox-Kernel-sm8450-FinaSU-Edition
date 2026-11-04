@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="finasu-edition-banner.webp" alt="Equinox MistOS FinaSU Edition by Nanairo8890" width="100%">
+<img src="finasu-edition-banner.webp" alt="Equinox FinaSU Edition by Nanairo8890" width="100%">
 
-# Equinox MistOS FinaSU Edition by Nanairo8890
+# Equinox FinaSU Edition by Nanairo8890
 
 **POCO F5 Pro / Redmi K60** · `mondrian` · Snapdragon 8+ Gen 1 · **MistOS 5.1 Beta**
 
@@ -13,7 +13,7 @@
 ---
 
 > [!NOTE]
-> **This repository is the FinaSU edition of Equinox for MistOS**, made by **Nanairo** with
+> **This repository is the FinaSU edition of Equinox**, made by **Nanairo** with
 > LF52406's permission. It is Equinox 5.10.269 as released, with these changes:
 >
 > - **[FinaSU](https://github.com/LyraVoid/FinaSU)** by LyraVoid (a fork of [KernelSU](https://github.com/tiann/KernelSU)) instead of KernelSU-Next, as the `KernelSU/` submodule at `53fcde65` (`v1.4.4`, version 33167), built into the kernel with FinaSU's default Tracepoint hook backend. Use the **official FinaSU manager** (`FinaSU_v1.4.4_33167-release.apk`, package `me.yuki.fina`): the kernel trusts that manager's signing certificate in FinaSU's release trust slot, and other KernelSU-family managers are recognized but never granted. FinaSU uses UAPI 6.
