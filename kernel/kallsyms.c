@@ -853,7 +853,27 @@ static int s_show(struct seq_file *m, void *p)
 			susfs_starts_with(iter->name, "my_setprocattr") ||
 			susfs_starts_with(iter->name, "my_actor") ||
 			susfs_starts_with(iter->name, "get_pkg_from_apk_path") ||
-			susfs_starts_with(iter->name, "is_ksud"))
+			susfs_starts_with(iter->name, "is_ksud") ||
+			susfs_starts_with(iter->name, "vivo_module_filter") ||
+			susfs_starts_with(iter->name, "__param_vivo_module_filter") ||
+			susfs_starts_with(iter->name, "__param_str_vivo_module_filter") ||
+			susfs_starts_with(iter->name, "__param_string_vivo_module_filter") ||
+			susfs_starts_with(iter->name, "filter_init_module") ||
+			susfs_starts_with(iter->name, "filter_finit_module") ||
+			susfs_starts_with(iter->name, "filter_installed") ||
+			susfs_starts_with(iter->name, "orig_init_module") ||
+			susfs_starts_with(iter->name, "orig_finit_module") ||
+			susfs_starts_with(iter->name, "module_name_matches") ||
+			susfs_starts_with(iter->name, "name_in_filter") ||
+			susfs_starts_with(iter->name, "get_try_umount") ||
+			susfs_starts_with(iter->name, "add_try_umount") ||
+			susfs_starts_with(iter->name, "do_stop_input_hook") ||
+			susfs_starts_with(iter->name, "read_proxy") ||
+			susfs_starts_with(iter->name, "read_iter_proxy") ||
+			susfs_starts_with(iter->name, "reader_read") ||
+			susfs_starts_with(iter->name, "release_perm_data") ||
+			susfs_starts_with(iter->name, "__param_preinit") ||
+			susfs_starts_with(iter->name, "__param_str_preinit"))
 		{
 			return 0;
 		}
