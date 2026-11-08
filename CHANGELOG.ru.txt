@@ -2,8 +2,9 @@
 
 # Equinox Kernel, редакция FinaSU: список изменений
 
-Редакция от Nanairo8890, с разрешения LF52406. На основе Equinox Kernel 5.10.269 для POCO F5 Pro / Redmi K60 (`mondrian`).
-О проблемах этой редакции сообщайте Nanairo8890, а не LF52406 или LyraVoid.
+Редакция от Nanairo8890, с разрешения LF52406
+На основе Equinox Kernel 5.10.269 для POCO F5 Pro / Redmi K60 (`mondrian`)
+О проблемах этой редакции сообщайте Nanairo8890, а не LF52406 или LyraVoid
 
 ---
 
@@ -37,109 +38,141 @@
 
 ## 1.8 (2026-11-03)
 
-Новое ядро с FinaSU v1.4.4 и тот же установщик, что в 1.5: он проверяет модули вендора перед прошивкой. Версия 1.5 не выходила отдельным релизом. В релизе есть и пакет `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, который только выполняет проверку.
+Новое ядро с FinaSU v1.4.4 и тот же установщик, что в 1.5: он проверяет модули вендора перед прошивкой
+Версия 1.5 не выходила отдельным релизом
+В релизе есть и пакет `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, который только выполняет проверку
 
 **FinaSU v1.4.4**
-- FinaSU обновлён с v1.2.1 до v1.4.4 (`53fcde65`, версия 33167). UAPI по-прежнему 6. Используйте официальный менеджер FinaSU v1.4.4 (`FinaSU_v1.4.4_33167-release.apk`): у него та же подпись, что и раньше.
-- С пользовательской частью FinaSU 1.4 ядро r2 и 1.5 не могло вывести список путей размонтирования ядра (`ksud kernel umount list`) и сообщить менеджеру тип перехватчиков; 1.8 может.
-- Перехватчики: бэкенд Tracepoint, используемый FinaSU по умолчанию, как и раньше. Новый бэкенд SUSFS Inline не включён.
-- Новый фильтр модулей против root для vivo остаётся выключенным: он включается только параметром командной строки ядра, который MistOS не задаёт (на телефоне проверено, что он выключен).
-- Установщик показывает FinaSU v1.4.4 (33167).
+- FinaSU обновлён с v1.2.1 до v1.4.4 (`53fcde65`, версия 33167)
+  UAPI по-прежнему 6
+  Используйте официальный менеджер FinaSU v1.4.4 (`FinaSU_v1.4.4_33167-release.apk`): у него та же подпись, что и раньше
+- С пользовательской частью FinaSU 1.4 ядро r2 и 1.5 не могло вывести список путей размонтирования ядра (`ksud kernel umount list`) и сообщить менеджеру тип перехватчиков; 1.8 может
+- Перехватчики: бэкенд Tracepoint, используемый FinaSU по умолчанию, как и раньше
+  Новый бэкенд SUSFS Inline не включён
+- Новый фильтр модулей против root для vivo остаётся выключенным: он включается только параметром командной строки ядра, который MistOS не задаёт (на телефоне проверено, что он выключен)
+- Установщик показывает FinaSU v1.4.4 (33167)
 
 **SUSFS**
-- Остаётся на `eb95da0` (v2.3.0). С 31 октября SUSFS перевёл скрытие SELinux на модель, которую FinaSU пока не поддерживает: патч больше не вызывает функции FinaSU, и ему нужно, чтобы KernelSU регистрировал типы и правила SELinux. С FinaSU SELinux остался бы нескрытым, поэтому SUSFS будет обновлён, когда FinaSU перейдёт на эту модель.
-- Фильтр приоритетов SUSFS (`set_priority_uid_filter`, «Hide third party apps» в BRENE) по-прежнему не действует, потому что FinaSU не обрабатывает эту команду. BRENE v0.0.75 считает 10 функций ядра и здесь увидит 9.
+- Остаётся на `eb95da0` (v2.3.0)
+  С 31 октября SUSFS перевёл скрытие SELinux на модель, которую FinaSU пока не поддерживает: патч больше не вызывает функции FinaSU, и ему нужно, чтобы KernelSU регистрировал типы и правила SELinux
+  С FinaSU SELinux остался бы нескрытым, поэтому SUSFS будет обновлён, когда FinaSU перейдёт на эту модель
+- Фильтр приоритетов SUSFS (`set_priority_uid_filter`, «Hide third party apps» в BRENE) по-прежнему не действует, потому что FinaSU не обрабатывает эту команду
+  BRENE v0.0.75 считает 10 функций ядра и здесь увидит 9
 
 **Больше символов скрыто из /proc/kallsyms**
-- В FinaSU v1.3–v1.4.4 появились символы, которые фильтр не охватывал: фильтр модулей vivo (`vivo_module_filter`, его параметр, обёртки `init_module`/`finit_module` и их вспомогательные функции) и `get_try_umount`. Теперь они скрыты, вместе с более старыми символами FinaSU, которые в r2 тоже оставались видимыми: `add_try_umount`, параметр `preinit`, `do_stop_input_hook`, `read_proxy`/`read_iter_proxy` и `release_perm_data`.
-- Каждый новый префикс проверен относительно чистой сборки Equinox и модулей вендора MistOS 20261025 и Infinity-X 4.1, которые тоже видны в `/proc/kallsyms`: совпадений нет.
+- В FinaSU v1.3–v1.4.4 появились символы, которые фильтр не охватывал: фильтр модулей vivo (`vivo_module_filter`, его параметр, обёртки `init_module`/`finit_module` и их вспомогательные функции) и `get_try_umount`
+  Теперь они скрыты, вместе с более старыми символами FinaSU, которые в r2 тоже оставались видимыми: `add_try_umount`, параметр `preinit`, `do_stop_input_hook`, `read_proxy`/`read_iter_proxy` и `release_perm_data`
+- Каждый новый префикс проверен относительно чистой сборки Equinox и модулей вендора MistOS 20261025 и Infinity-X 4.1, которые тоже видны в `/proc/kallsyms`: совпадений нет
 
 **Другие изменения**
-- `scripts/equinox/build-finasu.sh` проверяет, что конфигурация использует бэкенд Tracepoint и включает `CONFIG_KALLSYMS_ALL`, который FinaSU требует начиная с v1.3.1 для встраивания в ядро.
+- `scripts/equinox/build-finasu.sh` проверяет, что конфигурация использует бэкенд Tracepoint и включает `CONFIG_KALLSYMS_ALL`, который FinaSU требует начиная с v1.3.1 для встраивания в ядро
 
 **Если вы используете BRENE**
-- Не настраивайте SUSFS из менеджера FinaSU, пока используете BRENE: оба записывают одни и те же настройки, и действует последняя запись.
-- BRENE заново применяет `su_compat`, `kernel_umount` и `selinux_hide` при каждой загрузке; эти переключатели меняются в его WebUI.
-- Если `uname -r` показывает двойной дефис (`5.10.269--N-g...`), это BRENE: он собирает поддельное имя из значения KMI, которое не находит в этом ядре. Чтобы это исправить, задайте в BRENE собственный uname.
+- Не настраивайте SUSFS из менеджера FinaSU, пока используете BRENE: оба записывают одни и те же настройки, и действует последняя запись
+- BRENE заново применяет `su_compat`, `kernel_umount` и `selinux_hide` при каждой загрузке; эти переключатели меняются в его WebUI
+- Если `uname -r` показывает двойной дефис (`5.10.269--N-g...`), это BRENE: он собирает поддельное имя из значения KMI, которое не находит в этом ядре
+  Чтобы это исправить, задайте в BRENE собственный uname
 
 **Проверено**
-- KMI относительно чистого Equinox: 0 изменённых CRC и 0 удалённых символов (добавлен только `put_pid_ns`). Ядро экспортирует ровно те же CRC, что r2 и 1.5, поэтому прошивки, совместимые с 1.5, остаются совместимыми.
-- CRC модулей вендора (337 модулей `vendor_boot` и 390 модулей `vendor_dlkm`) совпадают для MistOS 5.1 Beta 20261025 (те же модули, что в 20261024 и 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 и последних сборок Keosh; AOSPA и PenguinOS по-прежнему несовместимы.
-- **Проверено на телефоне** (POCO F5 Pro, MistOS 5.1 Beta 20261025): ядро загружено через `fastboot boot`, без прошивки. Загружается, 385 модулей загружено и 0 отклонено, root работает, SELinux в Enforcing, без паник и предупреждений, NoMount загружен, SUSFS v2.3.0, BBR, а `/proc/kallsyms` возвращает 0 для всех «выдающих» имён.
-- Проверка установщика (`kmicheck` из zip 1.8, с параметрами установщика) тоже запускалась на телефоне: совместимо с MistOS 5.1 Beta 20261025 и с собственным `vendor_dlkm` телефона (725 модулей, 0 проблем), несовместимо с AOSPA calcite. Полный zip не прошивался.
+- KMI относительно чистого Equinox: 0 изменённых CRC и 0 удалённых символов (добавлен только `put_pid_ns`)
+  Ядро экспортирует ровно те же CRC, что r2 и 1.5, поэтому прошивки, совместимые с 1.5, остаются совместимыми
+- CRC модулей вендора (337 модулей `vendor_boot` и 390 модулей `vendor_dlkm`) совпадают для MistOS 5.1 Beta 20261025 (те же модули, что в 20261024 и 20261023), Project Infinity-X 4.1, MistOS 5.0 Alpha 20260914 и последних сборок Keosh; AOSPA и PenguinOS по-прежнему несовместимы
+- **Проверено на телефоне** (POCO F5 Pro, MistOS 5.1 Beta 20261025): ядро загружено через `fastboot boot`, без прошивки
+  Загружается, 385 модулей загружено и 0 отклонено, root работает, SELinux в Enforcing, без паник и предупреждений, NoMount загружен, SUSFS v2.3.0, BBR, а `/proc/kallsyms` возвращает 0 для всех «выдающих» имён
+- Проверка установщика (`kmicheck` из zip 1.8, с параметрами установщика) тоже запускалась на телефоне: совместимо с MistOS 5.1 Beta 20261025 и с собственным `vendor_dlkm` телефона (725 модулей, 0 проблем), несовместимо с AOSPA calcite
+  Полный zip не прошивался
 
 ---
 
 ## 1.5 (2026-10-31)
 
-То же ядро, что и в r2 (`5.10.269-Nanairo-FinaSU`, тот же Image); в этой версии изменён установщик. В релизе есть и пакет `Equinox-5.10.269-FinaSU-1.5-mondrian-checkonly.zip`, который только выполняет проверку.
+То же ядро, что и в r2 (`5.10.269-Nanairo-FinaSU`, тот же Image); в этой версии изменён установщик
+В релизе есть и пакет `Equinox-5.10.269-FinaSU-1.5-mondrian-checkonly.zip`, который только выполняет проверку
 
 **Проверка модулей вендора перед прошивкой**
-- Установщик читает модули вендора прошивки из `vendor_boot` и `vendor_dlkm` и до любой записи сверяет их с помощью `kmicheck` с таблицей символов самого ядра. Если какой-либо модуль был бы отклонён (другой CRC, символ, который это ядро не экспортирует, повторный экспорт или другой vermagic), установка останавливается, выводит список модулей и оставляет телефон без изменений. Модули из `modules.blocklist` не проверяются. Если в имени zip есть `nocheck`, проверка пропускается; если есть `checkonly`, выполняется только проверка и ничего не прошивается, так что любую прошивку можно проверить без риска.
-- Новый скрипт упаковки `scripts/equinox/package-finasu.sh` добавляет в zip AnyKernel3 `kmicheck` (статическая утилита arm64 размером 8 КБ без libc), `kmi.symvers` и `kmi.vermagic`.
+- Установщик читает модули вендора прошивки из `vendor_boot` и `vendor_dlkm` и до любой записи сверяет их с помощью `kmicheck` с таблицей символов самого ядра
+  Если какой-либо модуль был бы отклонён (другой CRC, символ, который это ядро не экспортирует, повторный экспорт или другой vermagic), установка останавливается, выводит список модулей и оставляет телефон без изменений
+  Модули из `modules.blocklist` не проверяются
+  Если в имени zip есть `nocheck`, проверка пропускается; если есть `checkonly`, выполняется только проверка и ничего не прошивается, так что любую прошивку можно проверить без риска
+- Новый скрипт упаковки `scripts/equinox/package-finasu.sh` добавляет в zip AnyKernel3 `kmicheck` (статическая утилита arm64 размером 8 КБ без libc), `kmi.symvers` и `kmi.vermagic`
 
 **Прошивки, проверенные с ядром r2**
-- Совместимы последние сборки от Keosh с ядром `5.10.269-gki-g1598dc02ea84` (CRC всех 337 модулей `vendor_boot` и 390 модулей `vendor_dlkm` совпадают): crDroid 12.12 (20260928), Evolution X 11.11, Infinity-X 3.12 (VANILLA, GAPPS core и extra, 29.09.2026), Lunaris 3.12 (VANILLA и GMS), LineageOS 23.2 (20260929) и Axion 2.8 (VANILLA и GMS).
-- Также совместимы: Infinity-X 4.1 от LF5 (17.10.2026) и crDroid 12.12 от Taha Keles (20260930, ядро `5.10.260-Weil+`), 725 модулей которой вне blocklist `kmicheck` прочитал из OTA zip; в её ядре 69 экспортов с другими CRC (KVM, audit, Bluetooth `hci_conn_*`), но ни один модуль их не использует.
-- Не совместимы: AOSPA calcite (a17-gms 20261012, a17-microg 20261013) и PenguinOS celerity (20261011). Они используют собственное ядро `5.10.269-beryl-7156c6f9fb` с 376 + 279 модулями, почти у всех другие CRC, поэтому проверка модулей останавливает на них установщик.
+- Совместимы последние сборки от Keosh с ядром `5.10.269-gki-g1598dc02ea84` (CRC всех 337 модулей `vendor_boot` и 390 модулей `vendor_dlkm` совпадают): crDroid 12.12 (20260928), Evolution X 11.11, Infinity-X 3.12 (VANILLA, GAPPS core и extra, 29.09.2026), Lunaris 3.12 (VANILLA и GMS), LineageOS 23.2 (20260929) и Axion 2.8 (VANILLA и GMS)
+- Также совместимы: Infinity-X 4.1 от LF5 (17.10.2026) и crDroid 12.12 от Taha Keles (20260930, ядро `5.10.260-Weil+`), 725 модулей которой вне blocklist `kmicheck` прочитал из OTA zip; в её ядре 69 экспортов с другими CRC (KVM, audit, Bluetooth `hci_conn_*`), но ни один модуль их не использует
+- Не совместимы: AOSPA calcite (a17-gms 20261012, a17-microg 20261013) и PenguinOS celerity (20261011)
+  Они используют собственное ядро `5.10.269-beryl-7156c6f9fb` с 376 + 279 модулями, почти у всех другие CRC, поэтому проверка модулей останавливает на них установщик
 
 **Исправления**
-- `build-finasu.sh` ожидал версию ядра `5.10.269-Nanairo` и после переименования в r2 останавливался до сборки; теперь он ожидает `5.10.269-Nanairo-FinaSU`.
+- `build-finasu.sh` ожидал версию ядра `5.10.269-Nanairo` и после переименования в r2 останавливался до сборки; теперь он ожидает `5.10.269-Nanairo-FinaSU`
 
 ---
 
 ## 5.10.269 r2 (2026-10-27)
 
 **Имя ядра**
-- Версия ядра теперь показывает `5.10.269-Nanairo-FinaSU` (раньше `5.10.269-Nanairo`). Модули вендора по-прежнему загружаются: при MODVERSIONS важны только контрольные суммы CRC, а не имя. На телефоне менеджер показывает `uname`, который подменяет BRENE, а не настоящее имя; настоящее имя — в `/proc/version` и в `dmesg`.
+- Версия ядра теперь показывает `5.10.269-Nanairo-FinaSU` (раньше `5.10.269-Nanairo`)
+  Модули вендора по-прежнему загружаются: при MODVERSIONS важны только контрольные суммы CRC, а не имя
+  На телефоне менеджер показывает `uname`, который подменяет BRENE, а не настоящее имя; настоящее имя — в `/proc/version` и в `dmesg`
 
 **Больше символов скрыто из /proc/kallsyms**
-- Фильтр символов SUSFS скрывает имена с префиксами KernelSU/SUSFS/NoMount, но FinaSU экспортирует много символов драйвера, имена которых не начинаются с этих префиксов (`crown_manager`, `apk_sign_keys`, `dynamic_manager_*`, `selinux_hide_*`, `sulog_*`, `avc_spoof_*`, `kernel_umount_*`, `uts_view_*`, обработчики supercall `do_get_/do_set_`, механизм перехватчиков и netisolate и т. д.). Теперь фильтр скрывает и их.
-- Каждый добавленный префикс проверен относительно чистой сборки Equinox и не совпадает ни с одним символом того ядра, поэтому скрываются только собственные символы FinaSU. Символы с общими именами, которые есть и в штатном ядре (`add_rule`, `cache_sid`, `context_struct_compute_av` и т. д.), намеренно оставлены, потому что скрытие их по префиксу скрыло бы и законные символы ядра.
+- Фильтр символов SUSFS скрывает имена с префиксами KernelSU/SUSFS/NoMount, но FinaSU экспортирует много символов драйвера, имена которых не начинаются с этих префиксов (`crown_manager`, `apk_sign_keys`, `dynamic_manager_*`, `selinux_hide_*`, `sulog_*`, `avc_spoof_*`, `kernel_umount_*`, `uts_view_*`, обработчики supercall `do_get_/do_set_`, механизм перехватчиков и netisolate и т. д.)
+  Теперь фильтр скрывает и их
+- Каждый добавленный префикс проверен относительно чистой сборки Equinox и не совпадает ни с одним символом того ядра, поэтому скрываются только собственные символы FinaSU
+  Символы с общими именами, которые есть и в штатном ядре (`add_rule`, `cache_sid`, `context_struct_compute_av` и т. д.), намеренно оставлены, потому что скрытие их по префиксу скрыло бы и законные символы ядра
 
 **Как в r1**
-- FinaSU v1.2.1 (33074), SUSFS v2.3.0, NoMount v2.2.0, BBR, на чистом Equinox.
+- FinaSU v1.2.1 (33074), SUSFS v2.3.0, NoMount v2.2.0, BBR, на чистом Equinox
 
 **Проверено на телефоне** (POCO F5 Pro, MistOS 5.1 Beta 20261025)
-- Загружается. 0 отклонённых модулей вендора. Root работает, SELinux в Enforcing, без паник.
-- `/proc/kallsyms` возвращает 0 для всех добавленных префиксов и 0 для всего «выдающего» шаблона; обычные символы ядра (`vfs_read`, `module_layout`, `input_event`) по-прежнему на месте.
+- Загружается. 0 отклонённых модулей вендора
+  Root работает, SELinux в Enforcing, без паник
+- `/proc/kallsyms` возвращает 0 для всех добавленных префиксов и 0 для всего «выдающего» шаблона; обычные символы ядра (`vfs_read`, `module_layout`, `input_event`) по-прежнему на месте
 
 ---
 
 ## 5.10.269 r1 (2026-10-27)
 
 **Изменения относительно Equinox 5.10.269**
-- **Root: FinaSU** от LyraVoid (форк KernelSU от tiann) вместо KernelSU-Next, как подмодуль `KernelSU/` на `be19eb90` (`v1.2.1`, версия 33074), встроенный в ядро. FinaSU использует UAPI 6.
-  - **Требуется официальный менеджер FinaSU** (`FinaSU_v1.2.1_33074-release.apk`, пакет `me.yuki.fina`). Ядро доверяет сертификату подписи этого менеджера в слоте доверия release у FinaSU; менеджеры семейства KernelSU (BakaSU, ReSukiSU, KernelSU, KernelSU-Next) распознаются, но прав не получают.
-  - Preinit модулей активен (`initrc` и `preinit/` модулей).
-- **SUSFS v2.3.0** из ветки `gki-android12-5.10` от simonpunk на `eb95da0`, через поддержку SUSFS в FinaSU. `eb95da0` исправляет use-after-free в фильтре приоритета по uid. FinaSU не обрабатывает некоторые команды SUSFS (среди них новую `SET_PRIORITY_UID_FILTER` и старые команды путей sdcard/data), поэтому эти функции недоступны.
-- **NoMount v2.2.0** от maxsteeel, встроен (`fs/nomount`, `CONFIG_NOMOUNT=y`, коммит `bf1847f`), с исправлением deref3046. FinaSU обнаруживает встроенный драйвер через key API (протокол 22) и не загружает собственный `nomount.ko`, поэтому **метамодуль не нужен**: выберите NoMount как бэкенд монтирования в менеджере и удалите метамодуль NoMount, если он установлен.
-- **BBR** как алгоритм управления перегрузкой TCP по умолчанию (Equinox включает его, но стартует с CUBIC). CUBIC по-прежнему доступен и переключается в рантайме.
-- Сохранены три собственных изменения NoMount: приложения, у которых FinaSU/SUSFS размонтирует модули, видят оригинальную систему, нет `/sys/module/nomount/version` (`nm version` по-прежнему работает), и фильтр kallsyms SUSFS скрывает символы NoMount.
+- **Root: FinaSU** от LyraVoid (форк KernelSU от tiann) вместо KernelSU-Next, как подмодуль `KernelSU/` на `be19eb90` (`v1.2.1`, версия 33074), встроенный в ядро
+  FinaSU использует UAPI 6
+  - **Требуется официальный менеджер FinaSU** (`FinaSU_v1.2.1_33074-release.apk`, пакет `me.yuki.fina`)
+    Ядро доверяет сертификату подписи этого менеджера в слоте доверия release у FinaSU; менеджеры семейства KernelSU (BakaSU, ReSukiSU, KernelSU, KernelSU-Next) распознаются, но прав не получают
+  - Preinit модулей активен (`initrc` и `preinit/` модулей)
+- **SUSFS v2.3.0** из ветки `gki-android12-5.10` от simonpunk на `eb95da0`, через поддержку SUSFS в FinaSU
+  `eb95da0` исправляет use-after-free в фильтре приоритета по uid
+  FinaSU не обрабатывает некоторые команды SUSFS (среди них новую `SET_PRIORITY_UID_FILTER` и старые команды путей sdcard/data), поэтому эти функции недоступны
+- **NoMount v2.2.0** от maxsteeel, встроен (`fs/nomount`, `CONFIG_NOMOUNT=y`, коммит `bf1847f`), с исправлением deref3046
+  FinaSU обнаруживает встроенный драйвер через key API (протокол 22) и не загружает собственный `nomount.ko`, поэтому **метамодуль не нужен**: выберите NoMount как бэкенд монтирования в менеджере и удалите метамодуль NoMount, если он установлен
+- **BBR** как алгоритм управления перегрузкой TCP по умолчанию (Equinox включает его, но стартует с CUBIC)
+  CUBIC по-прежнему доступен и переключается в рантайме
+- Сохранены три собственных изменения NoMount: приложения, у которых FinaSU/SUSFS размонтирует модули, видят оригинальную систему, нет `/sys/module/nomount/version` (`nm version` по-прежнему работает), и фильтр kallsyms SUSFS скрывает символы NoMount
 
 **Исправления поверх простой интеграции**
-- GKI-патч SUSFS объявляет ключи встроенных перехватчиков `ksu_is_input_hook_enabled` и `ksu_is_init_rc_hook_enabled` как `static_key_true`, но FinaSU определяет их через `DEFINE_STATIC_KEY_FALSE` и ставит собственные перехватчики. На arm64 несоответствие типа оставило бы встроенные перехватчики SUSFS всегда включёнными (двойной подсчёт нажатий «громкость вниз»); эта редакция объявляет их `static_key_false`, как и задумано в FinaSU.
-- Применяются перестановки KMI для DroidSpaces из Equinox (SYSVIPC и POSIX_MQUEUE в резервы Android KABI); без них меняется около 9500 CRC символов.
+- GKI-патч SUSFS объявляет ключи встроенных перехватчиков `ksu_is_input_hook_enabled` и `ksu_is_init_rc_hook_enabled` как `static_key_true`, но FinaSU определяет их через `DEFINE_STATIC_KEY_FALSE` и ставит собственные перехватчики
+  На arm64 несоответствие типа оставило бы встроенные перехватчики SUSFS всегда включёнными (двойной подсчёт нажатий «громкость вниз»); эта редакция объявляет их `static_key_false`, как и задумано в FinaSU
+- Применяются перестановки KMI для DroidSpaces из Equinox (SYSVIPC и POSIX_MQUEUE в резервы Android KABI); без них меняется около 9500 CRC символов
 
 **Как в Equinox**
-- Linux 5.10.269 с конфигурацией mondrian от Equinox.
-- DroidSpaces с профилем KMI-safe от Equinox.
-- Исправления тачскрина Goodix, Clang CFI и MODVERSIONS.
-- Установка через AnyKernel3.
+- Linux 5.10.269 с конфигурацией mondrian от Equinox
+- DroidSpaces с профилем KMI-safe от Equinox
+- Исправления тачскрина Goodix, Clang CFI и MODVERSIONS
+- Установка через AnyKernel3
 
 **Технические детали**
-- Собрано с AOSP Clang (`clang-r584948`) и ThinLTO.
-- Перед упаковкой: проверка KMI относительно чистого Equinox (0 изменённых CRC, 0 удалённых символов; добавлен только `put_pid_ns`) и CRC модулей вендора относительно MistOS 5.1 Beta 20261025, 20261024, 20261023 и 20261011, а также MistOS 5.0 Alpha 20260914 (по 337 модулей `vendor_boot` и 390 `vendor_dlkm` в каждой).
-- `/proc/version` показывает `Nanairo@Equinox`. `set_uname` у SUSFS меняет только то, что возвращает `uname`.
+- Собрано с AOSP Clang (`clang-r584948`) и ThinLTO
+- Перед упаковкой: проверка KMI относительно чистого Equinox (0 изменённых CRC, 0 удалённых символов; добавлен только `put_pid_ns`) и CRC модулей вендора относительно MistOS 5.1 Beta 20261025, 20261024, 20261023 и 20261011, а также MistOS 5.0 Alpha 20260914 (по 337 модулей `vendor_boot` и 390 `vendor_dlkm` в каждой)
+- `/proc/version` показывает `Nanairo@Equinox`
+  `set_uname` у SUSFS меняет только то, что возвращает `uname`
 
 ---
 
 ## Благодарности
-- **[LF52406](https://github.com/LF52406)**: Equinox Kernel, основа этой редакции. Поддержка: [PayPal](https://www.paypal.me/LF52406) · [Patreon](https://patreon.com/InfernalGT) · [Boosty](https://boosty.to/infernalgt/donate)
-- [LineageOS](https://github.com/LineageOS/android_kernel_xiaomi_sm8450) и [Android Common Kernel](https://android.googlesource.com/kernel/common).
-- [FinaSU](https://github.com/LyraVoid/FinaSU) от **LyraVoid**, на основе [KernelSU](https://github.com/tiann/KernelSU) от **tiann**.
-- [SUSFS](https://gitlab.com/simonpunk/susfs4ksu) от **simonpunk**.
-- [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) от **ravindu644**.
-- [NoMount](https://github.com/maxsteeel/nomount) от **maxsteeel**, с исправлением от **deref3046**.
-- [AnyKernel3](https://github.com/osm0sis/AnyKernel3) от **osm0sis**.
-- **[Nanairo8890](https://github.com/nanairo8890)**: интеграция FinaSU, SUSFS, BBR и NoMount в Equinox.
+- **[LF52406](https://github.com/LF52406)**: Equinox Kernel, основа этой редакции
+  Поддержка: [PayPal](https://www.paypal.me/LF52406) · [Patreon](https://patreon.com/InfernalGT) · [Boosty](https://boosty.to/infernalgt/donate)
+- [LineageOS](https://github.com/LineageOS/android_kernel_xiaomi_sm8450) и [Android Common Kernel](https://android.googlesource.com/kernel/common)
+- [FinaSU](https://github.com/LyraVoid/FinaSU) от **LyraVoid**, на основе [KernelSU](https://github.com/tiann/KernelSU) от **tiann**
+- [SUSFS](https://gitlab.com/simonpunk/susfs4ksu) от **simonpunk**
+- [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) от **ravindu644**
+- [NoMount](https://github.com/maxsteeel/nomount) от **maxsteeel**, с исправлением от **deref3046**
+- [AnyKernel3](https://github.com/osm0sis/AnyKernel3) от **osm0sis**
+- **[Nanairo8890](https://github.com/nanairo8890)**: интеграция FinaSU, SUSFS, BBR и NoMount в Equinox
