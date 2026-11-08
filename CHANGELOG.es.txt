@@ -7,6 +7,34 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 1.9 (2026-11-08)
+
+Kernel nuevo con FinaSU v1.5.0
+El instalador, SUSFS, NoMount y todo lo demás es igual que en 1.8
+
+**FinaSU v1.5.0**
+- FinaSU pasa de v1.4.4 a v1.5.0 (`fbf8e003`, versión 33174)
+  Sigue en UAPI 6
+  Usa el manager oficial de FinaSU v1.5.0 (`FinaSU_v1.5.0_33174-release.apk`), que tiene la misma firma de antes
+- Kernel: dos arreglos de SELinux de FinaSU
+  Uno corrige cómo se lleva la cuenta de la generación de la política cuando se actualiza la política SELinux en funcionamiento (por ejemplo, por un módulo)
+  El otro marca qué tipos de SELinux estaban en la política original, para que la ocultación de SELinux ya no tenga que volver a buscar en las tablas de la política para distinguirlos de los que agrega FinaSU
+- Los demás cambios de v1.5.0 son del manager y de `ksud` (ya estaban en `ksud` 1.4.5)
+- Hooks: el backend Tracepoint, como antes
+
+**SUSFS**
+- Sigue en `eb95da0` (v2.3.0)
+  SUSFS v2.4.0 salió el 2026-11-08 con un filtro de prioridad nuevo y cambios en el lado de KernelSU de su parche; FinaSU todavía no los soporta, así que se actualizará cuando lo haga
+
+**Verificado**
+- KMI frente a Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`)
+  Exporta exactamente los mismos CRC que r2 y 1.8, así que las ROMs compatibles son las mismas
+- Los CRC de los módulos del vendor coinciden (337 de `vendor_boot` y 390 de `vendor_dlkm`) con MistOS 5.1 Beta 20261025, Project Infinity-X 4.1 y las últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles
+- **Probado en el teléfono** (POCO F5 Pro, MistOS 5.1 Beta 20261025) arrancando este kernel con `fastboot boot`, sin flashearlo: arranca, 385 módulos cargados (los mismos que con 1.8), SELinux en Enforcing, BBR, NoMount oculto en `/sys/module`, y el manager FinaSU v1.5.0 lo muestra funcionando (integrado, versión 33174-6, hooks Tracepoint, NoMount v2.2.0, SUSFS v2.3.0)
+- En esa prueba el shell no tenía root, así que `dmesg` y `/proc/kallsyms` no se leyeron en el teléfono; el filtro de kallsyms se comprobó en el kernel compilado (95 símbolos del driver quedan visibles, ninguno que delate el root)
+
+---
+
 ## 1.8 (2026-11-03)
 
 Kernel nuevo con FinaSU v1.4.4 y el mismo instalador de 1.5, que comprueba los módulos del vendor antes de flashear. La versión 1.5 no se publicó como release aparte. La release también trae el paquete como `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, que solo hace la comprobación.

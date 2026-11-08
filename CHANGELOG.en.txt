@@ -7,6 +7,34 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 1.9 (2026-11-08)
+
+New kernel with FinaSU v1.5.0
+The installer, SUSFS, NoMount and everything else are the same as 1.8
+
+**FinaSU v1.5.0**
+- FinaSU updated from v1.4.4 to v1.5.0 (`fbf8e003`, version 33174)
+  It still uses UAPI 6
+  Use the official FinaSU v1.5.0 manager (`FinaSU_v1.5.0_33174-release.apk`), which has the same signature as before
+- Kernel: two SELinux fixes from FinaSU
+  One fixes how the policy generation is tracked when the SELinux policy is updated at run time (for example by a module)
+  The other marks which SELinux types were in the original policy, so SELinux hiding no longer has to search the policy tables again to tell them apart from the types FinaSU adds
+- The other changes in v1.5.0 are in the manager and in `ksud` (already in `ksud` 1.4.5)
+- Hooks: the Tracepoint backend, as before
+
+**SUSFS**
+- Stays at `eb95da0` (v2.3.0)
+  SUSFS v2.4.0 came out on 2026-11-08 with a new priority filter and changes to the KernelSU side of its patch; FinaSU does not support them yet, so it will be updated once FinaSU does
+
+**Verified**
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added)
+  It exports exactly the same CRCs as r2 and 1.8, so the compatible ROMs stay the same
+- Vendor module CRCs match (337 `vendor_boot` and 390 `vendor_dlkm` modules) for MistOS 5.1 Beta 20261025, Project Infinity-X 4.1 and the latest builds from Keosh; AOSPA and PenguinOS are still not compatible
+- **Tested on the phone** (POCO F5 Pro, MistOS 5.1 Beta 20261025) by booting this kernel with `fastboot boot`, without flashing it: boots, 385 modules loaded (the same as 1.8), SELinux Enforcing, BBR, NoMount hidden from `/sys/module`, and the FinaSU v1.5.0 manager shows it working (built in, version 33174-6, Tracepoint hooks, NoMount v2.2.0, SUSFS v2.3.0)
+- In that test the shell had no root, so `dmesg` and `/proc/kallsyms` were not read on the phone; the kallsyms filter was checked on the built kernel (95 driver symbols left visible, none that reveals root)
+
+---
+
 ## 1.8 (2026-11-03)
 
 New kernel with FinaSU v1.4.4 and the same installer as 1.5, which checks the vendor modules before flashing. Version 1.5 was not published as a separate release. The release also has the package as `Equinox-5.10.269-FinaSU-1.8-mondrian-checkonly.zip`, which only runs the check.
