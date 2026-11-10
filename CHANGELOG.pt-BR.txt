@@ -8,6 +8,27 @@ Problemas com esta edição: reporte-os ao Nanairo8890, não ao LF52406 nem ao L
 
 ---
 
+## 2.0 (2026-11-10)
+
+Kernel novo com FinaSU v1.5.2 e SUSFS v2.4.0
+O instalador, o NoMount e o resto são iguais aos da 1.9
+
+**FinaSU v1.5.2**
+- O FinaSU passa da v1.5.0 para a v1.5.2 (`289e292a`, versão 33182), continua no UAPI 6
+  Gerenciador oficial `FinaSU_v1.5.2_33182-release.apk`, mesma assinatura
+- Gerenciador e `ksud`: aceita o SUSFS v2.4.0 (só no gerenciador), corrige syscalls pulados pelo seccomp no x86_64 e os links de imagens
+- Kernel: a ocultação do SELinux da v1.5.1 (lê o contexto uma vez na política ativa)
+
+**SUSFS**
+- Passa para a **v2.4.0**: o núcleo (`fs/susfs.c`) e os hooks (`security/selinux/*`, `kernel/sys.c`, `block/ioprio.c`) foram atualizados
+  O filtro de prioridade da v2.4.0 fica desligado: o comando dele ainda não está integrado no gerenciador
+
+**Verificado**
+- Testado no aparelho (POCO F5 Pro, MistOS 5.1 Beta 20261025): inicia com `fastboot boot` e depois foi gravado em `boot_a`; 385 módulos, Enforcing, root com `u:r:ksu:s0` e o SUSFS inicia como v2.4.0
+- KMI em relação ao Equinox limpo: 0 CRCs alterados e 0 símbolos removidos (só o `put_pid_ns` é adicionado)
+
+---
+
 ## 1.9 (2026-11-08)
 
 Kernel novo com o FinaSU v1.5.0

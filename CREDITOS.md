@@ -13,8 +13,8 @@ Los problemas de esta edición repórtalos a Nanairo, no a LF52406 ni a LyraVoid
 
 ## Qué cambia respecto de Equinox oficial
 
-- **FinaSU** v1.5.0 de LyraVoid en lugar de KernelSU-Next, integrado en el kernel. Necesita
-  el manager oficial de FinaSU (v1.5.0, 33174, o más nuevo con la misma firma).
+- **FinaSU** v1.5.1 de LyraVoid en lugar de KernelSU-Next, integrado en el kernel. Necesita
+  el manager oficial de FinaSU (v1.5.1, 33177, o más nuevo con la misma firma).
 - **SUSFS v2.3.0** desde la rama `gki-android12-5.10` de simonpunk, con la interfaz de SUSFS
   de FinaSU y todas las funciones activas (sus_path, sus_mount, sus_kstat, sus_map, spoof
   uname, spoof cmdline/bootconfig, open_redirect, log y ocultación de símbolos).
@@ -48,7 +48,7 @@ SYSVIPC/POSIX_MQUEUE.
 # Equinox Kernel — FinaSU edition (English)
 
 Equinox Kernel is **LF52406**'s kernel for mondrian. This build is Equinox 5.10.269 modified
-by Nanairo with LF52406's permission: LyraVoid's FinaSU v1.5.0 (based on KernelSU) replaces
+by Nanairo with LF52406's permission: LyraVoid's FinaSU v1.5.1 (based on KernelSU) replaces
 KernelSU-Next and is built in, SUSFS v2.3.0 uses FinaSU's SUSFS interface, TCP defaults to
 BBR, and maxsteeel's NoMount v2.2.0 (which includes deref3046's fix 7e7342c) is built in for
 FinaSU's NoMount backend. It needs the official FinaSU manager. Everything else is Equinox as

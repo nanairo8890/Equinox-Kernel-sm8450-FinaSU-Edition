@@ -8,6 +8,27 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 2.0 (2026-11-10)
+
+New kernel with FinaSU v1.5.2 and SUSFS v2.4.0
+The installer, NoMount and the rest are the same as 1.9
+
+**FinaSU v1.5.2**
+- FinaSU updated from v1.5.0 to v1.5.2 (`289e292a`, version 33182), still UAPI 6
+  Official manager `FinaSU_v1.5.2_33182-release.apk`, same signature
+- Manager and `ksud`: accepts SUSFS v2.4.0 (manager only), fixes seccomp-skipped syscalls on x86_64 and the manager image links
+- Kernel: the SELinux hiding from v1.5.1 (parses the context once against the live policy)
+
+**SUSFS**
+- Moves to **v2.4.0**: the core (`fs/susfs.c`) and the hooks (`security/selinux/*`, `kernel/sys.c`, `block/ioprio.c`) were updated
+  The v2.4.0 priority filter stays off: its command is not integrated in the manager yet
+
+**Verified**
+- Tested on the phone (POCO F5 Pro, MistOS 5.1 Beta 20261025): boots with `fastboot boot` and was then flashed to `boot_a`; 385 modules loaded, SELinux Enforcing, root as `u:r:ksu:s0`, and SUSFS starts as v2.4.0
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added)
+
+---
+
 ## 1.9 (2026-11-08)
 
 New kernel with FinaSU v1.5.0
