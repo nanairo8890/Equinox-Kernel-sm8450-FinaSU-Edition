@@ -8,6 +8,40 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 2.1 (2026-11-12)
+
+Sorry for releasing another version so soon, only a few hours after 2.0.1
+2.0.1 went out to hide KernelSU's SELinux types as soon as possible, with a patch of my own; that same day FinaSU released v1.6.1, which does that hiding natively and more completely and also brings security fixes, so it made no sense to keep it waiting
+If you already installed 2.0.1 nothing is wrong: 2.1 installs over it as usual, and you should update the manager too
+
+**FinaSU v1.6.1**
+- FinaSU goes from v1.5.2 to v1.6.1 (`14a71d95`, version 33198), still UAPI 6
+  Official manager `FinaSU_v1.6.1_33198-release.apk`, with the same signature
+- Security (manager and `ksud`): profile names with path separators, NUL, line breaks or relative path components are rejected, and the arguments passed to root shell commands are quoted
+- When the mount engine is switched to NoMount, the module directory is created first if it does not exist
+
+**Native SELinux hiding**
+- Since v1.6.0, FinaSU registers in SUSFS every type and every allow rule that KernelSU adds to the policy, not only `ksu` and `ksu_file` as the 2.0.1 patch did
+- That is why the 2.0.1 patch was removed: the FinaSU submodule is built exactly as LyraVoid releases it
+- FinaSU no longer changes the policy sequence number in a way a stock kernel would not show
+
+**SUSFS priority filter**
+- FinaSU now dispatches the command of the SUSFS v2.4.0 priority UID filter ("Hide third party apps" in BRENE), which had no effect up to 2.0.1
+
+**What stays the same**
+- SUSFS v2.4.0, NoMount v2.2.0, Tracepoint hooks, BBR, the `/proc/kallsyms` filter and the installer
+- The BakaSU edition does not change and stays at 2.0.1: BakaSU has released nothing new since commit `548d1dda`, which that version already includes, so this time only the FinaSU edition is updated
+- It still does not turn Duck Detector or similar detectors green: signals that do not come from the kernel remain, such as the TEE (TEESimulator), the Vector/LSPosed types and the ROM's own contexts
+
+**Verified**
+- Tested on the phone (POCO F5 Pro, MistOS 5.1 Beta 20261025) booting it with `fastboot boot` and then flashed to `boot_a`: it boots, 385 modules loaded and 0 rejected, SELinux Enforcing, root with `u:r:ksu:s0`, `ksud` 1.6.1, BBR and NoMount 22 (605)
+- With an app's UID, SELinux queries for `ksu` and `ksu_file` are rejected just like those for a type that does not exist; root still sees them
+- SUSFS v2.4.0 reports 10 features, the priority filter included; the filter itself was not tested in operation
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added); it exports the same CRCs as 2.0 and 2.0.1, so the compatible ROMs are the same
+- The vendor modules' CRCs match (337 from `vendor_boot` and 390 from `vendor_dlkm`) for MistOS 5.1 Beta 20261025 and Infinity-X 4.1
+
+---
+
 ## 2.0.1 (2026-11-12)
 
 Same kernel as 2.0 (FinaSU v1.5.2, SUSFS v2.4.0, NoMount v2.2.0); 2.0.1 only adds hiding KernelSU's own SELinux types

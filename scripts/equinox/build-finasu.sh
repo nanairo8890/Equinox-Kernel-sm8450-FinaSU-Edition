@@ -32,15 +32,10 @@ done
 [ -f "$ROOT/KernelSU/kernel/Kbuild" ] || git -C "$ROOT" submodule update --init KernelSU
 [ "$(readlink "$ROOT/drivers/kernelsu")" = ../KernelSU/kernel ] || { echo '[!] drivers/kernelsu link missing'; exit 1; }
 
-# Apply the SUSFS "hide own KSU sepolicy types" hotfix to the pristine submodule (idempotent).
-# The submodule stays pinned/pristine in git; this patch introduces the change only at build time.
-HOTFIX="$ROOT/scripts/equinox/patches/0001-susfs-hide-ksu-types.patch"
-if git -C "$ROOT/KernelSU" apply --reverse --check "$HOTFIX" 2>/dev/null; then
-    echo "[=] hotfix 0001-susfs-hide-ksu-types already applied"
-else
-    git -C "$ROOT/KernelSU" apply "$HOTFIX" || { echo '[!] cannot apply 0001-susfs-hide-ksu-types.patch'; exit 1; }
-    echo "[+] applied hotfix 0001-susfs-hide-ksu-types"
-fi
+# FinaSU v1.6.0 and later register the types and allow rules KernelSU injects as SUSFS hidden
+# entries themselves (KSU_SUSFS_HAS_TYPE_REGISTRATION), so the 2.0.1 patch is no longer needed.
+# That path is only compiled in when fs/susfs.c has susfs_add_sus_type().
+grep -q 'susfs_add_sus_type' "$ROOT/fs/susfs.c" || { echo '[!] fs/susfs.c lacks susfs_add_sus_type (SUSFS v2.4.0 registration)'; exit 1; }
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
