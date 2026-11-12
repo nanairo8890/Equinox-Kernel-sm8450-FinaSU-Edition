@@ -8,6 +8,34 @@ Problemas com esta edição: reporte-os ao Nanairo8890, não ao LF52406 nem ao L
 
 ---
 
+## 2.0.1 (2026-11-12)
+
+Mesmo kernel que a 2.0 (FinaSU v1.5.2, SUSFS v2.4.0, NoMount v2.2.0); a 2.0.1 só adiciona ocultar os tipos de SELinux do próprio KernelSU
+
+**Ocultar os tipos de SELinux do KernelSU dos apps**
+- O KernelSU cria seus próprios tipos na política do SELinux (`ksu` e `ksu_file`); um app podia confirmar que existiam consultando-os pelo sistema de arquivos do SELinux (`selinuxfs`), e isso entregava o root
+- Agora, ao aplicar suas regras, o kernel registra esses dois tipos na lista de tipos ocultos do SUSFS, que só é consultada para os apps (uid 10000 ou maior)
+- Para um app, `ksu` e `ksu_file` passam a responder como inexistentes (EINVAL), como um contexto que não está na política; a resolução de contextos do próprio kernel e a concessão de root não mudam, porque essa lista não participa das decisões do SELinux
+- É a mesma abordagem que o Magisk e o LSPosed já usam para os próprios tipos
+
+**Não muda a KMI**
+- A mudança está no código do KernelSU e não mexe em símbolos exportados: 0 CRC alterados e 0 símbolos removidos em relação ao Equinox limpo (só adiciona `put_pid_ns`, igual à 2.0)
+- Os CRC dos módulos do vendor continuam batendo (337 do `vendor_boot` e 390 do `vendor_dlkm`), então as ROMs compatíveis são as mesmas da 2.0
+
+**O que não resolve**
+- Não deixa o Duck Detector nem detectores parecidos no verde: continuam sinais que não vêm do kernel, como o TEE (TEESimulator), os tipos do Vector/LSPosed e contextos da própria ROM
+- Pelo kernel só dá para ocultar o que o kernel adiciona
+
+**Como é feito**
+- A mudança é aplicada como um patch sobre o submódulo do KernelSU na hora de compilar (`scripts/equinox/patches/0001-susfs-hide-ksu-types.patch`), então o submódulo fica intacto (pinned) e o FinaSU não é forkado
+
+**Verificado**
+- Testado no telefone (POCO F5 Pro, MistOS 5.1 Beta 20261025): inicia com `fastboot boot` e depois foi gravado no `boot_a`; 385 módulos carregados e 0 rejeitados, SELinux em Enforcing, root com `u:r:ksu:s0`
+- As consultas de SELinux dos apps a `ksu` e `ksu_file` passam a retornar EINVAL (antes elas os reconheciam), e o `dmesg` mostra `susfs: hide ksu type ... ret=0`
+- KMI em relação ao Equinox limpo: 0 CRC alterados e 0 símbolos removidos
+
+---
+
 ## 2.0 (2026-11-10)
 
 Kernel novo com FinaSU v1.5.2 e SUSFS v2.4.0
