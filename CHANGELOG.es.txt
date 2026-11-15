@@ -8,6 +8,41 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 2.5 (2026-11-15)
+
+NoMount pasa a v2.3.0 y FinaSU a v1.6.2
+
+**NoMount v2.3.0**
+- El driver integrado pasa de v2.2.0 a v2.3.0 (`7914458`, versión de driver 23, contador 720)
+- Las reglas ahora siguen al inodo del archivo y no al texto de la ruta, así que siguen funcionando si el destino se renombra o se mueve
+- Los archivos redirigidos se abren más rápido: el driver reutiliza un archivo de respaldo ya abierto
+- Arreglos de memoria (una lectura fuera de límites y casos de uso después de liberar) y de seguridad (comprobaciones de LSM al cambiar xattr, bits SUID/SGID quitados en los inodos virtuales)
+- Arreglos de caídas con montajes FUSE y con cgroup2
+- Las reglas cargan más rápido en el arranque
+- Se conservan los cambios de esta edición: las apps a las que se les desmontan los módulos ven el sistema original, y NoMount sigue oculto en `/sys/module` y `/proc/kallsyms`
+- Por qué se actualiza el kernel: el metamódulo v2.3.0 también funciona con un driver más viejo (22 o más nuevo), así que actualizar el kernel no es obligatorio para usarlo, pero los arreglos de arriba están en el driver del kernel, por lo que solo un kernel actualizado los trae, y NoMount pide actualizar juntos el driver y el metamódulo
+- Si NoMount muestra "Bootloop Prevented", se desactivó solo después de un arranque que no terminó (por ejemplo al probar un kernel sin flashearlo): borra el archivo `disable` de `/data/adb/nomount/` y reinicia, o instala de nuevo el módulo de NoMount
+- FinaSU lo sigue usando como su motor de montaje NoMount, sin metamódulo
+
+**FinaSU v1.6.2**
+- FinaSU pasa de v1.6.1 a v1.6.2 (`6cc294cc`, versión 33203), sigue en UAPI 6
+  Manager oficial `FinaSU_v1.6.2_33203-release.apk`, con la misma firma
+- La parte del kernel de FinaSU no cambia entre v1.6.1 y v1.6.2; lo nuevo está en el manager (elegir qué partes de un tema importar, y una vista previa de temas) y en una limpieza de `ksud`
+
+**Qué sigue igual**
+- SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, el filtro de `/proc/kallsyms` y el instalador
+- La edición BakaSU recibe la misma actualización de NoMount en su versión 2.5
+
+**Verificado**
+- Probado en el teléfono (POCO F5 Pro, MistOS 5.1 Beta 20261025) arrancando este kernel con `fastboot boot`, sin flashearlo: arranca, cargan 385 módulos y 0 se rechazan, SELinux en Enforcing, `nm version` informa 23 (720), NoMount inyecta las reglas del módulo y el arranque termina de forma segura, SUSFS v2.4.0 informa 10 funciones, `ksud` es 1.6.2 con UAPI 6, y `/proc/kallsyms` no muestra ningún nombre que delate el root
+- La prueba de NoMount usó un módulo con un solo archivo redirigido; las otras novedades del driver (rangos de UID, casos opacos y de whiteout, la caché de archivos ya abiertos) no se probaron
+- KMI frente a Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`)
+- Los CRC de los módulos del vendor coinciden (337 de `vendor_boot` y 390 de `vendor_dlkm`) con MistOS 5.1 Beta 20261025 y con las 11 últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles
+- Infinity-X 4.1 no se volvió a revisar en esta versión porque sus módulos ya no están en el equipo de compilación
+- El filtro de `/proc/kallsyms` se comprobó en el kernel compilado: ninguno de los símbolos del driver que quedan visibles delata el root, y NoMount no agrega símbolos visibles nuevos
+
+---
+
 ## 2.1 (2026-11-12)
 
 Perdón por sacar otra versión tan pronto, a pocas horas de la 2.0.1
