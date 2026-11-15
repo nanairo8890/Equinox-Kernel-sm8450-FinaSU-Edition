@@ -8,6 +8,31 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 2.5.1 (2026-11-15)
+
+FinaSU pasa a v1.6.3
+Todo lo demás es igual que en 2.5
+
+**FinaSU v1.6.3**
+- FinaSU pasa de v1.6.2 a v1.6.3 (`06d71e8a`, versión 33204), sigue en UAPI 6
+  Manager oficial `FinaSU_v1.6.3_33204-release.apk`, con la misma firma
+- El hook nuevo de SELinux (`inode_setxattr`) es para kernels sin SUSFS y no se instala en builds con SUSFS, así que no aplica a esta edición
+- El analizador de contextos de SELinux ahora se detiene en el primer usuario o rol desconocido, igual que el nativo
+
+**Qué sigue igual**
+- NoMount v2.3.0, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, el filtro de `/proc/kallsyms` y el instalador
+- La edición BakaSU recibe los dos commits más nuevos de BakaSU (arreglos de compilación) en su versión 2.5.1
+
+**Verificado**
+- Probado en el teléfono (POCO F5 Pro, MistOS 5.1 Beta 20261025): flasheado en la partición de arranque y arrancado desde ella, cargan 385 módulos y 0 se rechazan, SELinux está en Enforcing, `nm version` da 23 (720), NoMount termina el arranque de forma segura, SUSFS v2.4.0 se inicializa, `ksud` es 1.6 con UAPI 6, sin Oops ni panic, y `/proc/kallsyms` no muestra ningún nombre que delate root
+- La prueba de NoMount usó un módulo con un solo archivo redirigido; las otras novedades del driver (rangos de UID, casos opacos y whiteout, la caché de archivos ya abiertos) no se probaron
+- KMI frente a Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`)
+- Los CRC de los módulos del vendor coinciden (337 de `vendor_boot` y 390 de `vendor_dlkm`) con MistOS 5.1 Beta 20261025 y con las 11 últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles
+- Infinity-X 4.1 no se revisó de nuevo en esta versión porque sus módulos ya no están en la máquina de compilación
+- El filtro de `/proc/kallsyms` se comprobó en el kernel compilado: ningún símbolo del driver que queda visible delata root, y NoMount no agrega símbolos visibles nuevos
+
+---
+
 ## 2.5 (2026-11-15)
 
 NoMount pasa a v2.3.0 y FinaSU a v1.6.2
