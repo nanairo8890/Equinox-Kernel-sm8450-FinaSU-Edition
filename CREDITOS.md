@@ -20,7 +20,7 @@ Los problemas de esta edición repórtalos a Nanairo, no a LF52406 ni a LyraVoid
   uname, spoof cmdline/bootconfig, open_redirect, log y ocultación de símbolos).
 - **BBR** como control de congestión TCP por defecto (Equinox trae BBR, pero usa CUBIC
   por defecto).
-- **NoMount v2.3.0** de maxsteeel integrado en el kernel. Lo usa el backend NoMount de
+- **NoMount v2.3.1** de maxsteeel integrado en el kernel. Lo usa el backend NoMount de
   FinaSU, sin metamódulo. Esta edición hace que las apps a las que FinaSU/SUSFS desmonta los
   módulos vean el sistema original, y oculta NoMount de `/sys/module` y `/proc/kallsyms`.
 - Compilado con Clang de AOSP y ThinLTO (Equinox usa Neutron Clang y LTO completo). Clang
@@ -50,7 +50,7 @@ SYSVIPC/POSIX_MQUEUE.
 Equinox Kernel is **LF52406**'s kernel for mondrian. This build is Equinox 5.10.269 modified
 by Nanairo with LF52406's permission: LyraVoid's FinaSU v1.6.4 (based on KernelSU) replaces
 KernelSU-Next and is built in, SUSFS v2.4.0 uses FinaSU's SUSFS interface, TCP defaults to
-BBR, and maxsteeel's NoMount v2.3.0 (which includes deref3046's fix 7e7342c) is built in for
+BBR, and maxsteeel's NoMount v2.3.1 (which includes deref3046's fix 7e7342c) is built in for
 FinaSU's NoMount backend. It needs the official FinaSU manager. Everything else is Equinox as
 released, DroidSpaces included. All base kernel work is LF52406's; please report issues with
 this edition to Nanairo, not to LF52406 or LyraVoid.

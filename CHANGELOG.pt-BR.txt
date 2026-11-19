@@ -8,6 +8,31 @@ Problemas com esta edição: reporte-os ao Nanairo8890, não ao LF52406 nem ao L
 
 ---
 
+## 2.5.6 (2026-11-19)
+
+O NoMount passa para a v2.3.1
+Todo o resto é igual ao da 2.5.5
+
+**NoMount v2.3.1**
+- O driver embutido passa da v2.3.0 para a v2.3.1 (`dcd77d0`, versão do driver 23, contagem 785); o protocolo continua na v23
+- Correções do kernel vindas do upstream: uma revisão dos caminhos rápidos e do ciclo de vida, tabelas hash maiores para regras e UIDs, operações de exportação de file handles para os arquivos redirecionados, e a limpeza do superbloco movida para `put_super`
+- As mudanças desta edição continuam: os processos que têm os módulos desmontados veem o sistema original, e o NoMount fica oculto de `/sys/module` e `/proc/kallsyms`
+- O FinaSU continua usando o driver embutido como backend do NoMount; o metamódulo não é necessário
+
+**O que continua igual**
+- FinaSU v1.6.4, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, o filtro de `/proc/kallsyms` e o instalador
+- A edição BakaSU passa para a 2.5.2 com a mesma atualização do NoMount
+
+**Verificado**
+- Testado no telefone (POCO F5 Pro, MistOS 5.1 Beta 20261025) com um boot via `fastboot boot`, sem gravar nada: carregam 385 módulos, o SELinux está em Enforcing, o root funciona, `nm version` mostra 23 (785), o NoMount carrega, o SUSFS v2.4.0 é inicializado, o `dmesg` não mostra Oops nem panic, e o `/proc/kallsyms` não mostra nenhum nome que denuncie root
+- KMI contra o Equinox limpo: 0 CRCs alterados e 0 símbolos removidos (só `put_pid_ns` é adicionado)
+- Os CRCs dos módulos do vendor coincidem (337 do `vendor_boot` e 390 do `vendor_dlkm`) com o MistOS 5.1 Beta 20261025 e com as 11 builds mais recentes da Keosh; AOSPA e PenguinOS continuam incompatíveis
+- A compilação não mostra avisos nem erros no código do FinaSU, do SUSFS e do NoMount
+- O Infinity-X 4.1 não foi conferido de novo nesta versão porque os módulos dele não estão mais na máquina de compilação
+- O filtro de `/proc/kallsyms` foi conferido no kernel compilado: nenhum símbolo do driver que continua visível denuncia root, e o NoMount não adiciona símbolos visíveis novos
+
+---
+
 ## 2.5.5 (2026-11-18)
 
 O FinaSU passa para a v1.6.4
