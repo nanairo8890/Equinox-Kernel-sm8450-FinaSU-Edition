@@ -8,6 +8,31 @@ Problemas com esta edição: reporte-os ao Nanairo8890, não ao LF52406 nem ao L
 
 ---
 
+## 2.5.5 (2026-11-18)
+
+O FinaSU passa para a v1.6.4
+Todo o resto é igual ao da 2.5.1
+
+**FinaSU v1.6.4**
+- O FinaSU passa da v1.6.3 para a v1.6.4 (`ff0e34f1`, versão 33211), continua no UAPI 6
+  Gerenciador oficial `FinaSU_v1.6.4_33211-release.apk`, com a mesma assinatura
+- A única mudança no kernel está no resolvedor de símbolos: a busca exata de um símbolo agora para na primeira correspondência
+- O resto da v1.6.4 é o gerenciador e o `ksud`: novos controles do filtro de UID prioritário para o SUSFS (a parte do kernel já estava no SUSFS v2.4.0), uma tela de abertura renovada, um seletor de animação do ícone de navegação e uma tela de gravação de módulos melhorada
+
+**O que continua igual**
+- NoMount v2.3.0, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, o filtro de `/proc/kallsyms` e o instalador
+- A edição BakaSU continua na 2.5.1
+
+**Verificado**
+- Testado no telefone (POCO F5 Pro, MistOS 5.1 Beta 20261025) com um boot a partir de `fastboot boot`, sem gravar nada: 385 módulos carregam, o SELinux está em Enforcing, `nm version` mostra 23 (720), o NoMount carrega, o SUSFS v2.4.0 é inicializado, o `ksud` é 1.6.4 com UAPI 6, o `dmesg` não mostra Oops nem panic, e `/proc/kallsyms` não mostra nenhum nome que revele root
+- KMI em relação ao Equinox limpo: 0 CRCs alterados e 0 símbolos removidos (apenas `put_pid_ns` é adicionado)
+- Os CRCs dos módulos do vendor coincidem (337 de `vendor_boot` e 390 de `vendor_dlkm`) com o MistOS 5.1 Beta 20261025 e com as 11 últimas builds da Keosh; AOSPA e PenguinOS continuam não compatíveis
+- A compilação não mostra avisos nem erros no código do FinaSU, do SUSFS e do NoMount
+- O Infinity-X 4.1 não foi verificado de novo nesta versão porque seus módulos não estão mais na máquina de compilação
+- O filtro de `/proc/kallsyms` foi verificado no kernel compilado: nenhum símbolo do driver que continua visível revela root, e o NoMount não adiciona símbolos visíveis novos
+
+---
+
 ## 2.5.1 (2026-11-15)
 
 O FinaSU passa para a v1.6.3

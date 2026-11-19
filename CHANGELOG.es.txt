@@ -8,6 +8,31 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 2.5.5 (2026-11-18)
+
+FinaSU pasa a v1.6.4
+Todo lo demás es igual que en 2.5.1
+
+**FinaSU v1.6.4**
+- FinaSU pasa de v1.6.3 a v1.6.4 (`ff0e34f1`, versión 33211), sigue en UAPI 6
+  Manager oficial `FinaSU_v1.6.4_33211-release.apk`, con la misma firma
+- El único cambio en el kernel está en el resolvedor de símbolos: la búsqueda exacta de un símbolo ahora se detiene en la primera coincidencia
+- El resto de v1.6.4 es el manager y `ksud`: controles nuevos del filtro de UID prioritario para SUSFS (la parte del kernel ya estaba en SUSFS v2.4.0), una pantalla de inicio renovada, un selector de animación del icono de navegación y una pantalla de flasheo de módulos mejorada
+
+**Qué sigue igual**
+- NoMount v2.3.0, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, el filtro de `/proc/kallsyms` y el instalador
+- La edición BakaSU se queda en 2.5.1
+
+**Verificado**
+- Probado en el teléfono (POCO F5 Pro, MistOS 5.1 Beta 20261025) con un arranque desde `fastboot boot`, sin flashear nada: cargan 385 módulos, SELinux está en Enforcing, `nm version` da 23 (720), NoMount carga, SUSFS v2.4.0 se inicializa, `ksud` es 1.6.4 con UAPI 6, `dmesg` no muestra Oops ni panic, y `/proc/kallsyms` no muestra ningún nombre que delate root
+- KMI frente a Equinox limpio: 0 CRC cambiados y 0 símbolos eliminados (solo se agrega `put_pid_ns`)
+- Los CRC de los módulos del vendor coinciden (337 de `vendor_boot` y 390 de `vendor_dlkm`) con MistOS 5.1 Beta 20261025 y con las 11 últimas builds de Keosh; AOSPA y PenguinOS siguen sin ser compatibles
+- La compilación no muestra avisos ni errores en el código de FinaSU, SUSFS y NoMount
+- Infinity-X 4.1 no se revisó de nuevo en esta versión porque sus módulos ya no están en la máquina de compilación
+- El filtro de `/proc/kallsyms` se comprobó en el kernel compilado: ningún símbolo del driver que queda visible delata root, y NoMount no agrega símbolos visibles nuevos
+
+---
+
 ## 2.5.1 (2026-11-15)
 
 FinaSU pasa a v1.6.3
