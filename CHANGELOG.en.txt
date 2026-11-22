@@ -8,6 +8,30 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 2.5.8 (2026-11-21)
+
+FinaSU goes to v1.7.0
+Everything else is the same as 2.5.7
+
+**FinaSU v1.7.0**
+- FinaSU goes from v1.6.5 to v1.7.0 (`a85c03ab`, version 33224), still UAPI 6; use the FinaSU v1.7.0 manager
+- Kernel: SELinux now allows `logd` to read the attributes of root processes (`kernel/selinux/rules.c`), the only kernel file that changes
+- Manager: new FolkZygisk panel, the install page now separates LKM from AnyKernel3, and new icon and logo
+
+**What stays the same**
+- NoMount v2.3.1, SUSFS v2.4.0, Tracepoint hooks, BBR, DroidSpaces, the `/proc/kallsyms` filter and the installer
+- The installer shows FinaSU v1.7.0 (33224)
+
+**Verified**
+- Tested on the phone (POCO F5 Pro, MistOS 5.1 Beta 20261025) after flashing the zip and rebooting: 385 modules load, SELinux is Enforcing, root works, `ksud` is 1.7.0 with UAPI 6, the kernel reports version 33224, NoMount loads, SUSFS v2.4.0 is initialized, and `dmesg` shows no Oops or panic
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added)
+- Vendor module CRCs match (337 from `vendor_boot` and 390 from `vendor_dlkm`) for MistOS 5.1 Beta 20261025 and for the 11 latest Keosh builds; AOSPA and PenguinOS are still not compatible
+- The build shows no warnings or errors in the FinaSU, SUSFS and NoMount code
+- Infinity-X 4.1 was not rechecked in this version because its modules are no longer on the build machine
+- The `/proc/kallsyms` filter was checked on the built kernel: none of the driver symbols left visible reveals root, and NoMount adds no new visible symbol
+
+---
+
 ## 2.5.7 (2026-11-20)
 
 FinaSU goes to v1.6.5
