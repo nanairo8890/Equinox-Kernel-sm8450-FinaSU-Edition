@@ -72,6 +72,7 @@
 extern bool susfs_is_current_ksu_domain(void);
 extern bool susfs_is_sus_type_rcu(u32 sid);
 extern void susfs_spoof_avd_allowed_rcu(u32 s_type, u32 t_type, u32 c_type, u32 *avd_allowed);
+extern int susfs_add_sus_type(const char *secctx, u32 type_value);
 extern struct selinux_state selinux_state;
 #endif // #ifdef CONFIG_KSU_SUSFS
 
@@ -4217,6 +4218,35 @@ int susfs_security_context_str_to_sid(struct selinux_state *state,
 {
 	return susfs_security_context_to_sid(state, scontext, strlen(scontext),
 				       sid, gfp);
+}
+
+/*
+ * Equinox FinaSU Edition: register a type that already exists in the live policy
+ * (for example the ROM's "adbroot") in the SUSFS sus-type list, so that an app's
+ * selinuxfs context queries can no longer confirm the type is present. This only
+ * resolves the type value and hands it to susfs_add_sus_type(); enforcement of the
+ * real policy is unchanged, so ADB root keeps working. Returns 0 on success,
+ * -ENOENT if the type is not in the current policy.
+ */
+int susfs_register_existing_sus_type(const char *type_name)
+{
+	struct selinux_policy *policy;
+	struct type_datum *typdatum;
+	u32 value = 0;
+
+	rcu_read_lock();
+	policy = rcu_dereference(selinux_state.policy);
+	if (policy) {
+		typdatum = symtab_search(&policy->policydb.p_types, type_name);
+		if (typdatum && !typdatum->attribute)
+			value = typdatum->value;
+	}
+	rcu_read_unlock();
+
+	if (!value)
+		return -ENOENT;
+	/* susfs_add_sus_type may sleep (kzalloc/mutex); we are outside the rcu lock */
+	return susfs_add_sus_type(type_name, value);
 }
 
 void susfs_security_compute_av_user(struct selinux_state *state,
