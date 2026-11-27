@@ -16,7 +16,7 @@
 > **This repository is the FinaSU edition of Equinox**, made by **Nanairo** with
 > LF52406's permission. It is Equinox 5.10.269 as released, with these changes:
 >
-> - **[FinaSU](https://github.com/LyraVoid/FinaSU)** by LyraVoid (a fork of [KernelSU](https://github.com/tiann/KernelSU)) instead of KernelSU-Next, as the `KernelSU/` submodule at `a85c03ab` (`v1.7.0`, version 33224), built into the kernel with FinaSU's default Tracepoint hook backend. Use the **official FinaSU manager** (`FinaSU_v1.7.0_33224-release.apk`, package `me.yuki.fina`): the kernel trusts that manager's signing certificate in FinaSU's release trust slot, and other KernelSU-family managers are recognized but never granted. FinaSU uses UAPI 6.
+> - **[FinaSU](https://github.com/LyraVoid/FinaSU)** by LyraVoid (a fork of [KernelSU](https://github.com/tiann/KernelSU)) instead of KernelSU-Next, as the `KernelSU/` submodule at `1627e52f` (`v1.7.1`, version 33227), built into the kernel with FinaSU's default Tracepoint hook backend. Use the **official FinaSU manager** (`FinaSU_v1.7.1_33227-release.apk`, package `me.yuki.fina`): the kernel trusts that manager's signing certificate in FinaSU's release trust slot, and other KernelSU-family managers are recognized but never granted. FinaSU uses UAPI 6.
 > - **SUSFS v2.4.0** from [simonpunk's](https://gitlab.com/simonpunk/susfs4ksu) `gki-android12-5.10` branch, through FinaSU's SUSFS support. FinaSU v1.6.0 and later register the SELinux types and rules KernelSU injects as SUSFS hidden entries themselves, so SELinux queries from apps do not see them.
 > - **BBR** as the default TCP congestion control.
 > - **[NoMount](https://github.com/maxsteeel/nomount) v2.3.1** by maxsteeel built in (`fs/nomount`), which includes deref3046's fix. FinaSU detects the built-in driver and uses it as the **NoMount** mount backend, so **no metamodule is needed** (choose NoMount in the manager; remove the NoMount metamodule if installed). Processes that FinaSU/SUSFS umount modules for see the stock filesystem, and NoMount is hidden from `/sys/module` and `/proc/kallsyms`.
@@ -26,7 +26,7 @@
 > builds are at [LF52406/Equinox-Kernel-sm8450](https://github.com/LF52406/Equinox-Kernel-sm8450).
 > Report problems with this edition to Nanairo8890, not to LF52406 or LyraVoid.
 >
-> Build: `CLANG_DIR=/path/to/clang/bin scripts/equinox/build-finasu.sh`, then `scripts/equinox/package-finasu.sh` · Changes: [release notes](scripts/equinox/release-notes/5.10.269-finasu-2.5.8.md) · Changelog: [English](CHANGELOG.en.txt) · [Español](CHANGELOG.es.txt) · [Português (Brasil)](CHANGELOG.pt-BR.txt) · [Русский](CHANGELOG.ru.txt)
+> Build: `CLANG_DIR=/path/to/clang/bin scripts/equinox/build-finasu.sh`, then `scripts/equinox/package-finasu.sh` · Changes: [release notes](scripts/equinox/release-notes/5.10.269-finasu-2.5.9.md) · Changelog: [English](CHANGELOG.en.txt) · [Español](CHANGELOG.es.txt) · [Português (Brasil)](CHANGELOG.pt-BR.txt) · [Русский](CHANGELOG.ru.txt)
 
 ---
 
@@ -34,10 +34,10 @@
 
 | Component | Current |
 |:--|:--|
-| **Version** | `2.5.8` |
+| **Version** | `2.5.9` |
 | **Linux** | `5.10.269-Nanairo-FinaSU` |
 | **Compatibility** | MistOS and the AOSP ROMs listed in [Other AOSP ROMs](#other-aosp-roms); tested on MistOS 5.1 Beta 20261025 (`fastboot boot`) |
-| **FinaSU** | `v1.7.0` (33224), built in · Tracepoint hooks |
+| **FinaSU** | `v1.7.1` (33227), built in · Tracepoint hooks |
 | **SUSFS** | `2.4.0` |
 | **NoMount** | `v2.3.1` built in |
 | **DroidSpaces** | Supported |
@@ -61,6 +61,14 @@
 ---
 
 ## Latest Changes
+
+### 2.5.9
+
+- FinaSU updated from `v1.7.0` to `v1.7.1` (33227); use the FinaSU `v1.7.1` manager. Nothing changes in the kernel: v1.7.1 only touches the manager and `ksud`
+- SELinux Hide is on by default (a saved `selinux_hide=0` is respected), and the ROM's `adbroot`/`adbroot_exec` types are hidden from the selinuxfs queries of apps while the ROM's real ADB root keeps working
+- Tested on the phone after flashing: SELinux Enforcing, `ksud` 1.7.1, kernel version 33227, 0 modules rejected, NoMount and SUSFS v2.4.0 work
+- The installer shows FinaSU v1.7.1 (33227)
+- Same NoMount v2.3.1, SUSFS v2.4.0, KMI and ROM compatibility as 2.5.8
 
 ### 2.5.8
 

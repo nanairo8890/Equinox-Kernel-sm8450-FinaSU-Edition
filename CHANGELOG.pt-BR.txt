@@ -8,6 +8,33 @@ Problemas com esta edição: reporte-os ao Nanairo8890, não ao LF52406 nem ao L
 
 ---
 
+## 2.5.9 (2026-11-27)
+
+O FinaSU passa para a v1.7.1
+O SELinux Hide fica ativo por padrão e os tipos de ADB root da ROM ficam ocultos para os apps
+
+**FinaSU v1.7.1**
+- O FinaSU passa da v1.7.0 para a v1.7.1 (`1627e52f`, versão 33227), continua em UAPI 6; use o manager do FinaSU v1.7.1
+- Nada muda no kernel: a v1.7.1 só mexe no manager (o seletor de apps excluídos do NoMount) e no `ksud` (não extrai de novo no boot binários que já existem e valida o ID do módulo antes de limpar a configuração)
+- O driver do kernel é o mesmo da v1.7.0; só muda a versão que ele informa (de 33224 para 33227)
+
+**SELinux Hide por padrão**
+- O kernel liga o SELinux Hide logo depois do boot, assim um app não consegue mais comprovar que os contextos `ksu` existem; um `selinux_hide=0` salvo é respeitado
+- Os tipos `adbroot`/`adbroot_exec` da ROM são registrados na lista de tipos ocultos do SUSFS, assim as consultas de um app ao selinuxfs não os confirmam mais, enquanto o ADB root real da ROM continua funcionando
+- Nada disso mexe no código oficial do FinaSU
+
+**O que continua igual**
+- NoMount v2.3.1, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, o filtro de `/proc/kallsyms` e o instalador
+
+**Verificado**
+- Testado no telefone (POCO F5 Pro, MistOS 5.1 Beta 20261025) depois de gravar no boot_a e reiniciar: o kernel informa a versão 33227, o `ksud` é 1.7.1 com UAPI 6, 0 módulos rejeitados, o SELinux em Enforcing, NoMount 23 (785), o SUSFS v2.4.0 inicializado, e o `dmesg` sem Oops nem panic
+- KMI contra o Equinox limpo: 0 CRCs alterados e 0 símbolos removidos (só `put_pid_ns` é adicionado)
+- CRCs dos módulos do vendor OK (337 do `vendor_boot` e 390 do `vendor_dlkm`) para o MistOS 5.1 Beta 20261025 e as 11 builds mais recentes da Keosh; AOSPA e PenguinOS continuam incompatíveis
+- A compilação não mostra avisos nem erros no código do FinaSU, do SUSFS e do NoMount
+- O filtro de `/proc/kallsyms` não deixa nenhum símbolo do driver que denuncie root
+
+---
+
 ## 2.5.8 (2026-11-21)
 
 O FinaSU passa para a v1.7.0

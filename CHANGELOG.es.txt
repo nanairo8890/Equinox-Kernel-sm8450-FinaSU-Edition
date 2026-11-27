@@ -8,6 +8,33 @@ Problemas con esta edición: repórtalos a Nanairo8890, no a LF52406 ni a LyraVo
 
 ---
 
+## 2.5.9 (2026-11-27)
+
+FinaSU pasa a v1.7.1
+SELinux Hide queda activo por defecto y se ocultan a las apps los tipos de ADB root de la ROM
+
+**FinaSU v1.7.1**
+- FinaSU pasa de v1.7.0 a v1.7.1 (`1627e52f`, versión 33227), sigue en UAPI 6; usa el manager de FinaSU v1.7.1
+- No cambia nada del kernel: v1.7.1 solo toca el manager (el selector de apps excluidas de NoMount) y `ksud` (ya no vuelve a extraer binarios que ya existen al arrancar y valida el ID de módulo antes de limpiar la configuración)
+- El driver del kernel es el mismo que en v1.7.0; solo cambia la versión que reporta (de 33224 a 33227)
+
+**SELinux Hide por defecto**
+- El kernel enciende SELinux Hide poco después del arranque, así una app ya no puede comprobar que existen los contextos `ksu`; un `selinux_hide=0` guardado se respeta
+- Los tipos `adbroot`/`adbroot_exec` de la ROM se registran en la lista de tipos ocultos de SUSFS, así las consultas a selinuxfs de una app ya no los confirman, mientras el ADB root real de la ROM sigue funcionando
+- Nada de esto toca el código oficial de FinaSU
+
+**Lo que sigue igual**
+- NoMount v2.3.1, SUSFS v2.4.0, hooks Tracepoint, BBR, DroidSpaces, el filtro de `/proc/kallsyms` y el instalador
+
+**Verificado**
+- Probado en el teléfono (POCO F5 Pro, MistOS 5.1 Beta 20261025) tras flashear en boot_a y reiniciar: el kernel reporta la versión 33227, `ksud` es 1.7.1 con UAPI 6, 0 módulos rechazados, SELinux en Enforcing, NoMount 23 (785), SUSFS v2.4.0 inicializado, y `dmesg` sin Oops ni panic
+- KMI contra Equinox limpio: 0 CRC cambiados y 0 símbolos removidos (solo se agrega `put_pid_ns`)
+- CRC de módulos del vendor OK (337 de `vendor_boot` y 390 de `vendor_dlkm`) para MistOS 5.1 Beta 20261025 y las 11 últimas builds de Keosh; AOSPA y PenguinOS siguen incompatibles
+- El build no muestra avisos ni errores en el código de FinaSU, SUSFS y NoMount
+- El filtro de `/proc/kallsyms` no deja ningún símbolo del driver que delate root
+
+---
+
 ## 2.5.8 (2026-11-21)
 
 FinaSU pasa a v1.7.0

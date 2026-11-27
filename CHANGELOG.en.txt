@@ -8,6 +8,33 @@ Problems with this edition: report them to Nanairo8890, not to LF52406 or LyraVo
 
 ---
 
+## 2.5.9 (2026-11-27)
+
+FinaSU goes to v1.7.1
+SELinux Hide is on by default and the ROM's ADB root types are hidden from apps
+
+**FinaSU v1.7.1**
+- FinaSU goes from v1.7.0 to v1.7.1 (`1627e52f`, version 33227), still UAPI 6; use the FinaSU v1.7.1 manager
+- Nothing changes in the kernel: v1.7.1 only touches the manager (the picker of apps excluded from NoMount) and `ksud` (it no longer extracts again at boot binaries that already exist, and it validates the module ID before cleaning its configuration)
+- The kernel driver is the same as in v1.7.0; only the version it reports changes (from 33224 to 33227)
+
+**SELinux Hide by default**
+- The kernel turns on SELinux Hide shortly after boot, so an app can no longer check that the `ksu` contexts exist; a saved `selinux_hide=0` is respected
+- The ROM's `adbroot`/`adbroot_exec` types are registered in the SUSFS hidden type list, so an app's selinuxfs queries no longer confirm them, while the ROM's real ADB root keeps working
+- None of this touches FinaSU's official code
+
+**What stays the same**
+- NoMount v2.3.1, SUSFS v2.4.0, Tracepoint hooks, BBR, DroidSpaces, the `/proc/kallsyms` filter and the installer
+
+**Verified**
+- Tested on the phone (POCO F5 Pro, MistOS 5.1 Beta 20261025) after flashing to boot_a and rebooting: the kernel reports version 33227, `ksud` is 1.7.1 with UAPI 6, 0 modules rejected, SELinux is Enforcing, NoMount 23 (785), SUSFS v2.4.0 is initialized, and `dmesg` shows no Oops or panic
+- KMI against clean Equinox: 0 changed CRCs and 0 removed symbols (only `put_pid_ns` is added)
+- Vendor module CRCs OK (337 from `vendor_boot` and 390 from `vendor_dlkm`) for MistOS 5.1 Beta 20261025 and the 11 latest Keosh builds; AOSPA and PenguinOS are still not compatible
+- The build shows no warnings or errors in the FinaSU, SUSFS and NoMount code
+- The `/proc/kallsyms` filter leaves no driver symbol that reveals root
+
+---
+
 ## 2.5.8 (2026-11-21)
 
 FinaSU goes to v1.7.0
